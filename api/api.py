@@ -11,10 +11,21 @@ ss = Seesaw(i2c_bus, addr=0x36)
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
+# SOIL READING CALIBRATION
+MIN_MOISTURE = 315
+MAX_MOISTURE = 1015 - MIN_MOISTURE
+def get_soil_moisture_percent(raw_value: int) -> int:
+    percent = ( (raw_value - MIN_MOISTURE ) / MAX_MOISTURE ) * 100
+    return percent
 @app.route('/', methods=['GET'])
 def home():
-    moisture_reading = ss.moisture_read()
-    return "<h1>Dirtbag-Pi, at your service.</h1></br>Moisture: " + str(moisture_reading)
+    soil_moisture_raw  = ss.moisture_read()
+    soil_moisture_percent = round(get_soil_moisture_percent(soil_moisture_raw), 2)
+    soil_temp = round(ss.get_temp(), 2)
+    html = "<h1>DirtBag-Pi, at your service</h1>"
+    html += "<br>Soil Moisture: " + str(soil_moisture_percent) 
+    html += "<br>Soil Temp. C.: " + str(soil_temp)
+    return html
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host='0.0.0.0')
