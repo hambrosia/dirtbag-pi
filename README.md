@@ -1,4 +1,4 @@
-# Dirtbag-Pi
+# DirtBag Pi
 
 ## Overview
 Dirtbag Pi is a network-connected garden and plant monitor written in Python for Raspberry Pi. It takes soil moisture and temperature readings using a widely available capacative sensor and makes them available through a simple webpage on the local network.

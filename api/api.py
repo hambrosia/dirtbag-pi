@@ -26,7 +26,7 @@ def home():
     soil_moisture_raw  = ss.moisture_read()
     soil_moisture_percent = round(get_soil_moisture_percent(soil_moisture_raw), 2)
     soil_temp = round(ss.get_temp(), 2)
-    html = "<h1>DirtBag-Pi, at your service</h1>"
+    html = "<h1>DirtBag Pi, at your service</h1>"
     html += "<br>Soil Moisture: " + str(soil_moisture_percent) + " Percent" 
     html += "<br>Soil Temperature: " + str(soil_temp) + " Celcius"
     return html
