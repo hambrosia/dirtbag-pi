@@ -23,6 +23,10 @@ def home() -> None:
     
     # Save reading to database
     db_manager.save_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
+    # Print all readings (test)
+    all_readings = db_manager.get_all_readings()
+    print(all_readings[0][0])
+
     # Generate HTML
     html = "<h1>DirtBag Pi, at your service</h1>"
     html += "<br>Soil Moisture: " + str(soil_moisture_percent) + " Percent" 
