@@ -1,8 +1,10 @@
-import datetime
+from datetime import datetime
 import os
 import sys
+import uuid
 import psycopg2
 import psycopg2.extras
+import sensor_manager
 
 # Postgres setup
 db_config = 'dbname=dirtbag'
@@ -24,7 +26,7 @@ def get_readings_between_timestamps(timestamp_start: datetime, timestamp_end: da
     cur.execute(query, values)
     return cur.fetchall()
 
-def save_reading(reading_uuid: str, reading_timestamp: datetime, soilmoisture: float, soiltemp: float) -> None:
+def write_reading(reading_uuid: str, reading_timestamp: datetime, soilmoisture: float, soiltemp: float) -> None:
     query = """
     INSERT INTO
         readings
@@ -35,3 +37,16 @@ def save_reading(reading_uuid: str, reading_timestamp: datetime, soilmoisture: f
     cur.execute(query, values)
     conn.commit()
 
+def take_and_write_reading():
+    # Create metadata
+    reading_uuid = uuid.uuid4()
+    reading_timestamp = datetime.now()
+
+    # Get moisture and temperature readings
+    soil_moisture_raw  = sensor_manager.get_soil_moisture()
+    soil_moisture_percent = sensor_manager.get_soil_moisture_percent(soil_moisture_raw)
+    soil_temp = sensor_manager.get_soil_temp()
+
+    # Save reading to database
+    write_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
+    print("New reading saved to database")

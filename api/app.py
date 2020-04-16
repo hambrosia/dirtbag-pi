@@ -6,6 +6,12 @@ import db_manager
 import sensor_manager
 import soil_stats
 import time_manager
+from apscheduler.schedulers.background import BackgroundScheduler
+
+# Write readings to database every 15 mins
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=db_manager.take_and_write_reading, trigger="interval",minutes=15)
+scheduler.start()
 
 # API setup
 app = flask.Flask(__name__)
@@ -14,17 +20,12 @@ app.config["DEBUG"] = True
 # Main endpoint
 @app.route('/', methods=['GET'])
 def home() -> None:
-    # Create metadata
-    reading_uuid = uuid.uuid4()
-    reading_timestamp = datetime.now()
 
     # Get moisture and temperature readings
     soil_moisture_raw  = sensor_manager.get_soil_moisture()
     soil_moisture_percent = sensor_manager.get_soil_moisture_percent(soil_moisture_raw) 
     soil_temp = sensor_manager.get_soil_temp()
     
-    # Save reading to database
-    db_manager.save_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
     # Get readings last 24 hrs
     now = datetime.now()
     last_24_hr = time_manager.get_timestamp_24_hr_ago()
