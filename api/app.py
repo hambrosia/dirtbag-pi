@@ -4,6 +4,7 @@ import flask
 import uuid
 import db_manager
 import sensor_manager
+import time_manager
 
 # API setup
 app = flask.Flask(__name__)
@@ -23,9 +24,11 @@ def home() -> None:
     
     # Save reading to database
     db_manager.save_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
-    # Print all readings (test)
-    all_readings = db_manager.get_all_readings()
-    print(all_readings[0][0])
+    # Print range of readings between timestamps (test)
+    now = datetime.now()
+    last_24_hr = time_manager.get_timestamp_24_hrs_ago()
+    readings_last_24_hr = db_manager.get_readings_between_timestamps(last_24_hr, now)
+    print(readings_last_24_hr)
 
     # Generate HTML
     html = "<h1>DirtBag Pi, at your service</h1>"
