@@ -11,7 +11,7 @@ try:
 except:
     print("Unable to connect to database, verify database configuration and credentials")
     sys.exit(os.EX_CONFIG)
-cur = conn.cursor()
+cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
 psycopg2.extras.register_uuid()
 
 def get_readings_between_timestamps(timestamp_start: datetime, timestamp_end: datetime):

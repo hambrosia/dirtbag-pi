@@ -26,9 +26,16 @@ def home() -> None:
     db_manager.save_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
     # Print range of readings between timestamps (test)
     now = datetime.now()
-    last_24_hr = time_manager.get_timestamp_24_hrs_ago()
+    last_24_hr = time_manager.get_timestamp_24_hr_ago()
     readings_last_24_hr = db_manager.get_readings_between_timestamps(last_24_hr, now)
     print(readings_last_24_hr)
+    
+    sum_soil = 0
+    for row in readings_last_24_hr:
+        sum_soil += row[1]
+    avg_soil_raw = sum_soil / len(readings_last_24_hr)
+    avg_soil_percent = sensor_manager.get_soil_moisture_percent(avg_soil_raw)
+    print("Average soil moisture last 24 hr: " + str(avg_soil_percent))
 
     # Generate HTML
     html = "<h1>DirtBag Pi, at your service</h1>"

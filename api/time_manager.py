@@ -2,7 +2,7 @@ from datetime import timedelta
 from datetime import datetime
 
 # Prepare intervals for average calculations
-def get_timestamp_24_hrs_ago():
+def get_timestamp_24_hr_ago():
     day_delta = timedelta(hours = 24)
     return datetime.now() - day_delta
 
