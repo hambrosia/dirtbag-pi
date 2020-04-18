@@ -4,7 +4,7 @@ import sys
 import uuid
 import psycopg2
 import psycopg2.extras
-import sensor_manager
+import manager.sensor_manager as sensor_manager
 
 # Postgres setup
 db_config = 'dbname=dirtbag'
@@ -50,3 +50,11 @@ def take_and_write_reading():
     # Save reading to database
     write_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
     print("New reading saved to database")
+
+def get_column_average(soil_readings: list, column: str) -> float:
+    sum = 0
+    for row in soil_readings:
+        sum += row[column]
+    avg = sum / len(soil_readings)
+    return avg
+

@@ -2,10 +2,10 @@ from datetime import datetime
 from datetime import timedelta
 import flask
 import uuid
-import db_manager
-import sensor_manager
+import manager.db_manager as db_manager
+import manager.sensor_manager as sensor_manager
 import soil_stats
-import time_manager
+import manager.time_manager as time_manager
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # Write readings to database every 15 mins
@@ -31,9 +31,9 @@ def home() -> None:
     last_24_hr = time_manager.get_timestamp_24_hr_ago()
     readings_last_24_hr = db_manager.get_readings_between_timestamps(last_24_hr, now)
 
-    avg_soil_moisture_raw_24 = soil_stats.get_column_average(readings_last_24_hr, 'soilmoisture')
+    avg_soil_moisture_raw_24 = db_manager.get_column_average(readings_last_24_hr, 'soilmoisture')
     avg_soil_moisture_percent_24 = sensor_manager.get_soil_moisture_percent(avg_soil_moisture_raw_24)
-    avg_soil_temp_24 = round(soil_stats.get_column_average(readings_last_24_hr, 'soiltemp'), 2)
+    avg_soil_temp_24 = round(db_manager.get_column_average(readings_last_24_hr, 'soiltemp'), 2)
     
     # Generate HTML
     html = "<h1>DirtBag Pi, at your service</h1>"
