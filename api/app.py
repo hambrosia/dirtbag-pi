@@ -4,7 +4,6 @@ import flask
 import uuid
 import manager.db_manager as db_manager
 import manager.sensor_manager as sensor_manager
-import soil_stats
 import manager.time_manager as time_manager
 from apscheduler.schedulers.background import BackgroundScheduler
 
