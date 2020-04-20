@@ -1,5 +1,5 @@
-from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
+
 
 # Prepare intervals for average calculations
 def get_timestamp_24_hr_ago():
@@ -13,4 +13,3 @@ def get_timestamp_week_ago():
 def get_timestamp_month_ago():
     month_delta = timedelta(days = 31)
     return datetime.now() - month_delta
-

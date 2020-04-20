@@ -1,9 +1,11 @@
-from datetime import datetime
 import os
 import sys
 import uuid
+from datetime import datetime
+
 import psycopg2
 import psycopg2.extras
+
 import manager.sensor_manager as sensor_manager
 
 # Postgres setup
@@ -59,4 +61,3 @@ def get_column_average(soil_readings: list, column: str) -> float:
         sum += row[column]
     avg = sum / len(soil_readings)
     return avg
-

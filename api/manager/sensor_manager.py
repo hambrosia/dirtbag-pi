@@ -1,6 +1,6 @@
+import busio
 from adafruit_seesaw.seesaw import Seesaw
 from board import SCL, SDA
-import busio
 
 # Sensor setup
 i2c_bus = busio.I2C(SCL, SDA)
@@ -22,4 +22,3 @@ def get_soil_moisture_percent(raw_value: int) -> float:
         return 0
     percent = ( (raw_value - MIN_MOISTURE ) / MAX_MOISTURE ) * 100
     return round(percent, 2)
-

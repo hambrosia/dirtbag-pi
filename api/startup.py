@@ -1,7 +1,10 @@
 from datetime import datetime
+
+from apscheduler.schedulers.background import BackgroundScheduler
+
 import manager.db_manager as db_manager
 import manager.plot_manager as plot_manager
-from apscheduler.schedulers.background import BackgroundScheduler
+
 
 def update_db_and_html():
     db_manager.take_and_write_reading()
@@ -17,4 +20,3 @@ def on_startup():
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=1)
     scheduler.start()
-

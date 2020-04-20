@@ -1,4 +1,5 @@
 import flask
+
 import startup
 
 # Create first reading, prerender html, start scheduler
