@@ -25,9 +25,8 @@ DirtBag Pi is a network-connected garden and plant monitor written in Python for
 
 ## Understanding the Output
 * Soil capacitance readings are returned by the sensor as a value between ~315 (air) and ~1015 (submersion in water). DirtBag converts this raw capacitance reading to an approximate moisture percent value rounded to two decimal points. 
-* Soil temperature readings are returned natively in Celcius by the sensor and displayed to the user in Celcius.
 
 ## Current and Planned Features
 * Part 1(DONE): Displays a webpage on the local network that shows the soil moisture and temperature.
-* Part 2: The webpage displays historical data including graphs and averages that persist on reboot of the Raspberry Pi.
+* Part 2(DONE): The webpage displays historical data including graphs and averages that persist on reboot of the Raspberry Pi.
 * Part 3: Anomaly alerting on unusual changes in moisture or temperature.
