@@ -18,5 +18,5 @@ def on_startup():
 
     # Start scheduler to update DB and rerender index on interval
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=1)
+    scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=15)
     scheduler.start()
