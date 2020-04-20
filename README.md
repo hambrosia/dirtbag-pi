@@ -3,6 +3,8 @@
 ## Overview
 DirtBag Pi is a network-connected garden and plant monitor written in Python for Raspberry Pi. It takes soil moisture and temperature readings using a widely available capacative sensor and makes them accessible through a simple webpage on the local network.
 
+![DirtBag Pi](img/dbp.jpg?raw=true "DirtBag Pi")
+
 ## Installation and Requirements
 * Use an [Adafruit STEMMA Soil Sensor](https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-sensor/python-circuitpython-test)
 * Connect the sensor to the [proper pins](https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-sensor/python-circuitpython-test).
@@ -26,7 +28,7 @@ DirtBag Pi is a network-connected garden and plant monitor written in Python for
 ## Understanding the Output
 Soil capacitance readings are returned by the sensor as a value between ~315 (air) and ~1015 (submersion in water). DirtBag converts this raw capacitance reading to an approximate moisture percent value rounded to two decimal points. 
 
-![Example plot](plot.png?raw=true "Example Graph")
+![Example plot](img/plot.png?raw=true "Example Graph")
 
 ## Current and Planned Features
 * Part 1(DONE): Displays a webpage on the local network that shows the soil moisture and temperature.
