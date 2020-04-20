@@ -1,9 +1,11 @@
-import plotly
-from plotly.graph_objs import Scatter, Layout
-import manager.db_manager as db_manager
-import manager.time_manager as time_manager
 from datetime import datetime
+
+import manager.db_manager as db_manager
 import manager.sensor_manager as sensor_manager
+import manager.time_manager as time_manager
+import plotly
+from plotly.graph_objs import Layout, Scatter
+
 
 def plot_month():
 
