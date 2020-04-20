@@ -13,10 +13,11 @@ def plot_month():
     readings_last_month = db_manager.get_readings_between_timestamps(timestamp_month_ago, timestamp_now)
 
     timestamps = [row['timestamp'] for row in readings_last_month]
-    moisture_readings = [sensor_manager.get_soil_moisture_percent(row['soilmoisture']) for row in readings_last_month]
-    
+    moisture_readings = [sensor_manager.get_soil_moisture_percent(row['soilmoisture']) for row in readings_last_month] 
  
-    data = [Scatter(x=timestamps, y=moisture_readings, mode='lines')]
-    plotly.offline.plot(data, filename='static/index.html')
+    plotly.offline.plot({
+            "data": [Scatter(x=timestamps, y=moisture_readings, mode='lines')],
+            "layout": Layout(title="DirtBag Pi: Soil Moisture Last 31 Days")},
+            filename='static/index.html')
 
-    print("Updated index.html")
+    print("%s: Updated index.html" % timestamp_now)

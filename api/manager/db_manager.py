@@ -49,7 +49,7 @@ def take_and_write_reading():
 
     # Save reading to database
     write_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
-    print("New reading saved to database")
+    print("%s: Saved reading to database" % reading_timestamp)
 
 def get_column_average(soil_readings: list, column: str) -> float:
     sum = 0
