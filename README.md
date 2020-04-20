@@ -29,5 +29,5 @@ DirtBag Pi is a network-connected garden and plant monitor written in Python for
 
 ## Current and Planned Features
 * Part 1(DONE): Displays a webpage on the local network that shows the soil moisture and temperature.
-* Part 2: The webpage displays historical data including graphs and averages that persist on reboot of the Raspberry Pi.
+* Part 2(DONE): The webpage displays historical data including graphs and averages that persist on reboot of the Raspberry Pi.
 * Part 3: Anomaly alerting on unusual changes in moisture or temperature.
