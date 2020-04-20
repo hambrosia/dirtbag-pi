@@ -11,6 +11,6 @@ def get_timestamp_week_ago():
     return datetime.now() - week_delta
 
 def get_timestamp_month_ago():
-    month_delta = timedelta(months = 1)
+    month_delta = timedelta(days = 31)
     return datetime.now() - month_delta
 

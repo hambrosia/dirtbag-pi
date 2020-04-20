@@ -53,6 +53,8 @@ def take_and_write_reading():
 
 def get_column_average(soil_readings: list, column: str) -> float:
     sum = 0
+    if len(soil_readings) == 0:
+        return 0
     for row in soil_readings:
         sum += row[column]
     avg = sum / len(soil_readings)

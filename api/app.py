@@ -5,11 +5,16 @@ import uuid
 import manager.db_manager as db_manager
 import manager.sensor_manager as sensor_manager
 import manager.time_manager as time_manager
+import manager.plot_manager as plot_manager
 from apscheduler.schedulers.background import BackgroundScheduler
 
 # Write readings to database every 15 mins
+def update_db_and_html():
+    db_manager.take_and_write_reading()
+    plot_manager.plot_month()
+
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=db_manager.take_and_write_reading, trigger="interval",minutes=15)
+scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=1)
 scheduler.start()
 
 # API setup
@@ -41,7 +46,7 @@ def home() -> None:
     html += "<br>"
     html += "<br>Average Soil Moisture Last 24 Hours: " + str(avg_soil_moisture_percent_24) + "  Percent"
     html += "<br>Average Soil Temperature Last 24 Hours: " + str(avg_soil_temp_24) + " Celcius"
-    return html
+    return app.send_static_file('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000, host='0.0.0.0')
