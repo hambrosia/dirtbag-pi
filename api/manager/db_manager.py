@@ -21,6 +21,7 @@ except:
 CUR = CONN.cursor(cursor_factory=psycopg2.extras.DictCursor)
 psycopg2.extras.register_uuid()
 
+
 def get_readings_between_timestamps(timestamp_start: datetime, timestamp_end: datetime):
     """Return readings between two timestamps in order to display graph for week, month, etc """
 
@@ -32,6 +33,7 @@ def get_readings_between_timestamps(timestamp_start: datetime, timestamp_end: da
     values = (timestamp_start, timestamp_end)
     CUR.execute(query, values)
     return CUR.fetchall()
+
 
 def write_reading(reading_uuid: str, reading_timestamp: datetime, soilmoisture: float, soiltemp: float) -> None:
     """Save a row to the database with a uuid, timestamp, moisture reading, and temp reading"""
@@ -45,6 +47,7 @@ def write_reading(reading_uuid: str, reading_timestamp: datetime, soilmoisture: 
     values = (reading_uuid, reading_timestamp, soilmoisture, soiltemp)
     CUR.execute(query, values)
     CONN.commit()
+
 
 def take_and_write_reading():
     """Reads moisture and temp from sensor, saves to new row in database"""
@@ -61,6 +64,7 @@ def take_and_write_reading():
     # Save reading to database
     write_reading(reading_uuid, reading_timestamp, soil_moisture_raw, soil_temp)
     print("%s: Saved reading to database" % reading_timestamp)
+
 
 def get_column_average(soil_readings: list, column: str) -> float:
     """Returns average value for column/list"""

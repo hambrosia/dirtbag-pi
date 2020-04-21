@@ -14,11 +14,13 @@ startup.on_startup()
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
+
 # Main endpoint
 @app.route('/', methods=['GET'])
 def home() -> None:
     """Start serving the graph with Flask"""
     return app.send_static_file('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False, port=5000, host='0.0.0.0')

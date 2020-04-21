@@ -14,6 +14,7 @@ def update_db_and_html():
     db_manager.take_and_write_reading()
     plot_manager.plot_month()
 
+
 def on_startup():
     """Prepopulate database, prerender html, start scheduler"""
 

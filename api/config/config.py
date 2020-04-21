@@ -14,4 +14,3 @@ def get_configs() -> dict:
     with open(config_path) as config_file:
         config_dict = json.load(config_file)
     return config_dict
-

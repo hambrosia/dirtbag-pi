@@ -11,13 +11,16 @@ SS = Seesaw(I2C, addr=0x36)
 MIN_MOISTURE = 315
 MAX_MOISTURE = 1015 - MIN_MOISTURE
 
+
 def get_soil_moisture():
     """Return soil moisture reading"""
     return SS.moisture_read()
 
+
 def get_soil_temp():
     """Return soil temp in Celcius"""
     return round(SS.get_temp(), 2)
+
 
 def get_soil_moisture_percent(raw_value: int) -> float:
     """Convert raw soil moisture reading to percent """
