@@ -8,10 +8,11 @@ from datetime import datetime
 import psycopg2
 import psycopg2.extras
 
+import config.config as config
 import manager.sensor_manager as sensor_manager
 
 # Postgres setup
-DB_CONFIG = 'dbname=dirtbag'
+DB_CONFIG = config.get_configs()['db-config']
 try:
     CONN = psycopg2.connect(DB_CONFIG)
 except:

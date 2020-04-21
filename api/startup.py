@@ -3,6 +3,7 @@ from datetime import datetime
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
+import config.config as config
 import manager.db_manager as db_manager
 import manager.plot_manager as plot_manager
 
@@ -22,6 +23,9 @@ def on_startup():
     update_db_and_html()
 
     # Start scheduler to update DB and rerender index on interval
+    polling_interval = config.get_configs()['polling-interval-minutes']
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=15)
+    scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=polling_interval)
     scheduler.start()
+    timestamp = datetime.now()
+    print("%s: Scheduler configured to take and save reading every %i minutes" % (timestamp, polling_interval))
