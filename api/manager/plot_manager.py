@@ -12,6 +12,7 @@ import manager.time_manager as time_manager
 
 def plot_month():
     """Render html graph for index"""
+
     timestamp_month_ago = time_manager.get_timestamp_month_ago()
     timestamp_now = datetime.now()
 

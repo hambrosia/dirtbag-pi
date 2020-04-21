@@ -1,6 +1,5 @@
 """Separate configuration from code and centralize in config.json file"""
 
-from pathlib import Path
 import json
 
 import definitions

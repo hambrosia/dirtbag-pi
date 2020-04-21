@@ -1,5 +1,4 @@
 """Manager for database functions: connect, return rows between timestamps, save rows, read sensor and write row, return column average """
-
 import os
 import sys
 import uuid
@@ -10,6 +9,7 @@ import psycopg2.extras
 
 import config.config as config
 import manager.sensor_manager as sensor_manager
+
 
 # Postgres setup
 DB_CONFIG = config.get_configs()['db-config']
@@ -24,7 +24,6 @@ psycopg2.extras.register_uuid()
 
 def get_readings_between_timestamps(timestamp_start: datetime, timestamp_end: datetime):
     """Return readings between two timestamps in order to display graph for week, month, etc """
-
     query = """
     SELECT timestamp, soilmoisture, soiltemp
     FROM readings
@@ -37,7 +36,6 @@ def get_readings_between_timestamps(timestamp_start: datetime, timestamp_end: da
 
 def write_reading(reading_uuid: str, reading_timestamp: datetime, soilmoisture: float, soiltemp: float) -> None:
     """Save a row to the database with a uuid, timestamp, moisture reading, and temp reading"""
-
     query = """
     INSERT INTO
         readings
@@ -50,8 +48,7 @@ def write_reading(reading_uuid: str, reading_timestamp: datetime, soilmoisture: 
 
 
 def take_and_write_reading():
-    """Reads moisture and temp from sensor, saves to new row in database"""
-
+    """Read moisture and temp from sensor, save to new row in database"""
     # Create metadata
     reading_uuid = uuid.uuid4()
     reading_timestamp = datetime.now()
@@ -67,8 +64,7 @@ def take_and_write_reading():
 
 
 def get_column_average(soil_readings: list, column: str) -> float:
-    """Returns average value for column/list"""
-
+    """Return average value for column/list"""
     total = 0
     if not soil_readings:
         return 0
