@@ -1,0 +1,4 @@
+{
+"polling-interval-minutes": 15,
+"db-name": "dirtbag"
+}
