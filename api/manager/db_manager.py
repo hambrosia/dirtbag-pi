@@ -12,7 +12,7 @@ import manager.sensor_manager as sensor_manager
 
 
 # Postgres setup
-DB_CONFIG = config.get_configs()['db-config']
+DB_CONFIG = config.get_secrets()['db-config']
 try:
     CONN = psycopg2.connect(DB_CONFIG)
 except:
