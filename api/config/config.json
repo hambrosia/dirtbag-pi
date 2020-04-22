@@ -1,4 +1,5 @@
 {
+  "db-config": "dbname=dirtbag",
   "polling-interval-minutes": 15,
-  "db-config": "dbname=dirtbag"
+  "template": "plotly"
 }

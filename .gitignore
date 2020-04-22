@@ -1,3 +1,5 @@
 venv
 __pycache__/
 api/static/index.html
+nohup.out
+.idea
