@@ -20,7 +20,7 @@ def get_soil_moisture():
 
 
 def get_soil_temp():
-    """Return soil temp in Celcius"""
+    """Return soil temp in Celsius"""
     return round(SS.get_temp(), 2)
 
 
