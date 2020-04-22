@@ -3,14 +3,16 @@ import busio
 from adafruit_seesaw.seesaw import Seesaw
 from board import SCL, SDA
 
+import config.config as config
+
+
 # Sensor setup
 I2C = busio.I2C(SCL, SDA)
 SS = Seesaw(I2C, addr=0x36)
 
 # Soil reading calibration
-MIN_MOISTURE = 315
-MAX_MOISTURE = 1015 - MIN_MOISTURE
-
+MIN_MOISTURE = config.get_configs()['soil-moisture-min']
+MAX_MOISTURE = config.get_configs()['soil-moisture-max'] - MIN_MOISTURE
 
 def get_soil_moisture():
     """Return soil moisture reading"""
