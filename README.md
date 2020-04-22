@@ -21,6 +21,7 @@ DirtBag Pi is a network-connected garden and plant monitor written in Python for
     * Create a database called dirtbag `create database dirtbag;`
     * Create a table caleld readings `create table readings(uuid uuid, timestamp timestamp, soilmoisture float, soiltemp float);`
     * Grant the user you created (pi) privileges to modify the database `GRANT ALL PRIVILEGES ON DATABASE dirtbag TO pi;`
+* Copy the secrets template, e.g. `cp api/config/secret-template.json api/config/secret.json` and populate with the correct database configuration based on the last step as well as e-mail account, password, and SMTP settings. `secret.json` is ignored by default, but exercise caution and carefully review your commits to ensure no secrets are published to your version control platform.
 * Get the IP of your Raspberry Pi: `ip addr`
 * Start the Flask application: `python3 api.py`
 * Navigate to `http://<ip-addr-of-pi>:5000` and the soil moisture and soil temperature readings will be shown.
