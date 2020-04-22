@@ -3,6 +3,7 @@ from datetime import datetime
 
 import plotly.graph_objects as go
 
+import config.config as config
 import definitions
 import manager.db_manager as db_manager
 import manager.sensor_manager as sensor_manager
@@ -26,6 +27,9 @@ def plot_month():
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
     fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celcius'))
+    
+    template = config.get_configs()['template']
+    fig.update_layout(title='DirtBag Pi - Soil Stats', template=template)
     fig.write_html(output_path)    
 
     print("%s: Updated index.html" % timestamp_now)
