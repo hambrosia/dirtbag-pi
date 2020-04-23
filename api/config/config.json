@@ -2,6 +2,9 @@
   "polling-interval-minutes": 15,
   "soil-moisture-min": 315,
   "soil-moisture-max": 1015,
+  "soil-moisture-alert-low": 25,
+  "soil-moisture-alert-high": 95,
+  "soil-moisture-alert-time": "07:00:00",
   "template": "plotly"
 }
 
