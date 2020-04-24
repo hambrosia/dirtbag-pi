@@ -30,3 +30,8 @@ def get_soil_moisture_percent(raw_value: int) -> float:
         return 0
     percent = ((raw_value - MIN_MOISTURE) / MAX_MOISTURE) * 100
     return round(percent, 2)
+
+def check_soil_moisture_threshold():
+    soil_moisture = get_soil_moisture_percent(get_soil_moisture())
+    print("CURRENT SOIL MOISTURE: %s" % soil_moisture)
+
