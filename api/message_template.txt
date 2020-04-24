@@ -1,0 +1,4 @@
+This is an automated alert from DirtBag Pi.
+Current soil moisture reading of ${SOIL_MOISTURE}% is outside of the normal range.
+Make sure to check on your plants!
+

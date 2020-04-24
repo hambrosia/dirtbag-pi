@@ -14,17 +14,26 @@ def update_db_and_html():
     plot_manager.plot_month()
 
 
+def start_monitor():
+ # Start scheduler to update DB and rerender index on interval
+    polling_interval = config.get_configs()['polling-interval-minutes']
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=polling_interval)
+    scheduler.start() 
+    
+    timestamp = datetime.now()
+    print("%s: Scheduler configured to take and save reading every %i minutes" % (timestamp, polling_interval))
+
+
 def on_startup():
     """Prepopulate database, prerender html, start scheduler"""
     timestamp = datetime.now()
     print("%s: Prepopulating database with initial reading, prerendering index.html" % timestamp)
+    
     # Ensure there is data in DB and an index.html on startup
     update_db_and_html()
-
-    # Start scheduler to update DB and rerender index on interval
-    polling_interval = config.get_configs()['polling-interval-minutes']
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=update_db_and_html, trigger="interval", minutes=polling_interval)
-    scheduler.start()
-    timestamp = datetime.now()
-    print("%s: Scheduler configured to take and save reading every %i minutes" % (timestamp, polling_interval))
+    
+    # Start monitor scheduler
+    start_monitor()
+    
+    #Start alert scheduler
