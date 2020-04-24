@@ -33,7 +33,8 @@ def start_threshold_alert():
     alert_hour = alert_time.split(":")[0]
     alert_minute = alert_time.split(":")[1]
     SCHEDULER.add_job(func=check_threshold, trigger='cron', hour=alert_hour, minute=alert_minute)
-
+    timestamp = datetime.now()
+    print("%s: Scheduler configured to send threshold alert daily at %s" % (timestamp, alert_time))
 
 def on_startup():
     """Prepopulate database, prerender html, start scheduler"""
@@ -47,6 +48,8 @@ def on_startup():
     start_monitor()
     
     #Start alert scheduler
-    start_threshold_alert() 
+    alerts_enabled = CONFIGS['enable-email-notifications']
+    if alerts_enabled:
+        start_threshold_alert() 
     
     SCHEDULER.start() 

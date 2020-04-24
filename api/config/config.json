@@ -1,4 +1,5 @@
 {
+  "enable-email-notifications": false,
   "polling-interval-minutes": 15,
   "soil-moisture-min": 315,
   "soil-moisture-max": 1015,
@@ -7,4 +8,3 @@
   "soil-moisture-alert-time": "6:30:00",
   "template": "plotly"
 }
-
