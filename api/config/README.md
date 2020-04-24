@@ -1,9 +1,11 @@
 # Configuration Options
 
 ## Settings in config.json
-
+* `enable-email-notifications`: Boolean that enables or disables email alerting. Off by default. Make sure to supply valid SMTP configs in `secret.json` if enabled.
 * `polling-interval-minutes`: Specifies the interval between each sensor read / write to the database. Increase this value to reduce the speed at which the database grows.
 * `soil-moisture-<min/max>`: Calibrates the minimum and maximum soil moisture values to real-world minimum and maximum, e.g. exposure to air and submersion in water. This is used to calculate the soil moisture percent value.
+*`soil-moisture-alert-<low/high>: Integer values between 0-100 to set the lower and upper bounds used for threshold e-mail alerting. If soil moisture falls outside the range, an e-mail will be sent. Otherwise, no action is taken.
+* `soil-moisture-alert-time": ISO formatted time. PM notifications take 24hr / military format, e.g. `17:30:00`. DirtBag Pi will check daily at this time to see if the soil moisture reading is within bounds.
 * `template`: Specifies the Plotly template to use for styling the graph. Options include `'ggplot2', 'seaborn', 'simple_white', 'plotly', 'plotly_white', 'plotly_dark', 'presentation', 'xgridoff','ygridoff', 'gridon', 'none'`
 
 ## Secrets in secret.json
