@@ -8,10 +8,13 @@ import manager.db_manager as db_manager
 import manager.plot_manager as plot_manager
 from manager.sensor_manager import check_soil_moisture_threshold as check_threshold
 
+
 CONFIGS = config.get_configs()
 SCHEDULER  = BackgroundScheduler()
+
+
 def update_db_and_html():
-    """Takes a reading, writes it to the database, updates the graph"""
+    """Take reading, write to database, update index.html"""
     db_manager.take_and_write_reading()
     plot_manager.plot_month()
 
@@ -29,7 +32,7 @@ def start_threshold_alert():
     alert_time = CONFIGS['soil-moisture-alert-time']
     alert_hour = alert_time.split(":")[0]
     alert_minute = alert_time.split(":")[1]
-    SCHEDULER.add_job(func=check_threshold, trigger='cron', hour='18', minute='41')
+    SCHEDULER.add_job(func=check_threshold, trigger='cron', hour=alert_hour, minute=alert_minute)
 
 
 def on_startup():

@@ -4,7 +4,7 @@
   "soil-moisture-max": 1015,
   "soil-moisture-alert-low": 25,
   "soil-moisture-alert-high": 95,
-  "soil-moisture-alert-time": "07:00:00",
+  "soil-moisture-alert-time": "6:30:00",
   "template": "plotly"
 }
 
