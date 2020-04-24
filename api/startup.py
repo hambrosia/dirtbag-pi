@@ -29,7 +29,7 @@ def start_threshold_alert():
     alert_time = CONFIGS['soil-moisture-alert-time']
     alert_hour = alert_time.split(":")[0]
     alert_minute = alert_time.split(":")[1]
-    SCHEDULER.add_job(func=check_threshold, trigger='cron', hour='18', minute='12')
+    SCHEDULER.add_job(func=check_threshold, trigger='cron', hour='18', minute='41')
 
 
 def on_startup():

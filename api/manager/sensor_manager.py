@@ -3,7 +3,7 @@ import busio
 from adafruit_seesaw.seesaw import Seesaw
 from board import SCL, SDA
 
-import alert_manager
+import manager.alert_manager as alert_manager
 import config.config as config
 
 
@@ -41,12 +41,7 @@ def check_soil_moisture_threshold() -> None:
     soil_moisture = int(get_soil_moisture_percent(get_soil_moisture()))
     min_moisture = CONFIGS['soil-moisture-alert-low']
     max_moisture = CONFIGS['soil-moisture-alert-high']
-    print("min: %s, max: %s, current: %s" % (min_moisture, max_moisture, soil_moisture))
-    if soil_moisture in range(min_moisture, max_moisture):
+    if soil_moisture not in range(min_moisture, max_moisture):
         alert_manager.send_moisture_alert_email(soil_moisture)
-        print("Soil moisture is within acceptable range")
-    else:
-        alert_manager.send_moisture_alert_email(soil_moisture)
-        print("Water your plants!")
 
 
