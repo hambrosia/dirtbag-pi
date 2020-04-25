@@ -4,3 +4,4 @@ api/static/index.html
 nohup.out
 .idea
 api/config/secret.json
+.vscode
