@@ -28,9 +28,9 @@ def plot_month():
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
     fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
-    
+
     template = config.get_configs()['template']
     fig.update_layout(title='DirtBag Pi - Soil Stats', template=template)
-    fig.write_html(output_path)    
+    fig.write_html(output_path)
 
     print("%s: Updated index.html" % timestamp_now)

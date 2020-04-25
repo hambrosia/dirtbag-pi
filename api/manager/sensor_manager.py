@@ -6,7 +6,6 @@ from board import SCL, SDA
 import manager.alert_manager as alert_manager
 import config.config as config
 
-
 # Sensor setup
 I2C = busio.I2C(SCL, SDA)
 SS = Seesaw(I2C, addr=0x36)
@@ -43,5 +42,3 @@ def check_soil_moisture_threshold() -> None:
     max_moisture = CONFIGS['soil-moisture-alert-high']
     if soil_moisture not in range(min_moisture, max_moisture):
         alert_manager.send_moisture_alert_email(soil_moisture)
-
-

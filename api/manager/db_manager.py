@@ -10,7 +10,6 @@ import psycopg2.extras
 import config.config as config
 import manager.sensor_manager as sensor_manager
 
-
 # Postgres setup
 DB_CONFIG = config.get_secrets()['db-config']
 try:

@@ -6,8 +6,7 @@ from string import Template
 import config.config as config
 import definitions
 
-
-SECRETS  = config.get_secrets()
+SECRETS = config.get_secrets()
 
 
 def make_smtp_server() -> smtplib.SMTP:
@@ -32,7 +31,6 @@ def send_moisture_alert_email(moisture_reading: int) -> None:
     smtp_server = make_smtp_server()
 
     for recipient in recipients:
-        
         msg = MIMEMultipart()
         msg_template = get_message_template()
         msg_text = msg_template.substitute(SOIL_MOISTURE=moisture_reading)
@@ -41,10 +39,10 @@ def send_moisture_alert_email(moisture_reading: int) -> None:
         msg['To'] = recipient
         msg['Subject'] = "DirtBag Pi: Soil Moisture Alert"
         msg.attach(MIMEText(msg_text, 'plain'))
-         
+
         smtp_server.send_message(msg)
         print("Message sent to %s" % recipient)
         del msg
-    
+
     smtp_server.quit()
     print("SMTP server quit")
