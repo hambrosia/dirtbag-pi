@@ -1,8 +1,8 @@
 venv
 __pycache__/
-api/static/index.html
+self-hosted/api/static/index.html
 nohup.out
 .idea
-api/config/secret.json
+self-hosted/api/config/secret.json
 .vscode
 .terraform
