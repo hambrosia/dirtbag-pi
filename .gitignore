@@ -6,3 +6,4 @@ nohup.out
 self-hosted/api/config/secret.json
 .vscode
 .terraform
+*.zip
