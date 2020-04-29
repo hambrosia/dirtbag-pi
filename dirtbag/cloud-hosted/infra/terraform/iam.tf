@@ -1,5 +1,4 @@
 # Save Reading Lambda Permissions
-
 resource "aws_iam_role" "save_reading_role" {
   name = "dirtbag-save-reading-role"
 
@@ -55,7 +54,56 @@ resource "aws_iam_role_policy_attachment" "save_reading_policy_attachment" {
   policy_arn = aws_iam_policy.save_reading.arn
 }
 
+# Render Index Lambda Permissions
 
+resource "aws_iam_role" "render_index_role" {
+  name = "dirtbag-render-index-role"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_policy" "render_index" {
+  name        = "dirtbag-s3-write"
+  description = "Allow DirtBag Pi Render Index Lambda to write to S3"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "render_index_policy_attachment" {
+  role       = aws_iam_role.render_index_role.name
+  policy_arn = aws_iam_policy.render_index.arn
+}
+
+# API Gateway Permissions
 resource "aws_iam_role" "api_gateway_cloudwatch" {
   name = "api_gateway_cloudwatch_global"
 
@@ -103,7 +151,6 @@ EOF
 }
 
 # Soil Sensor Client IAM Permissions
-
 resource "aws_iam_user" "dirtbag_client" {
   name = "dirtbag-client"
   path = "/"

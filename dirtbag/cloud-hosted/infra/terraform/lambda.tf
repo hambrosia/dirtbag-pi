@@ -18,7 +18,7 @@ resource "aws_lambda_function" "save_reading" {
 resource "aws_lambda_function" "render_index" {
   filename         = "../../lambda/zip/render_index.zip"
   function_name    = "dirtbag-render-index"
-  role             = ""
+  role             = aws_iam_role.render_index_role.arn
   handler          = "render_index.lambda_handler"
   runtime          = "python3.7"
   source_code_hash = filebase64sha256("../../lambda/zip/render_index.zip")
