@@ -14,3 +14,12 @@ resource "aws_lambda_function" "save_reading" {
   runtime          = "python3.7"
   source_code_hash = filebase64sha256("../../lambda/zip/save_reading.zip")
 }
+
+resource "aws_lambda_function" "render_index" {
+  filename         = "../../lambda/zip/render_index.zip"
+  function_name    = "dirtbag-render-index"
+  role             = ""
+  handler          = "render_index.lambda_handler"
+  runtime          = "python3.7"
+  source_code_hash = filebase64sha256("../../lambda/zip/render_index.zip")
+}
