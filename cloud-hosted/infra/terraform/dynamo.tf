@@ -14,11 +14,6 @@ resource "aws_dynamodb_table" "dirtbag-dynamodb-table" {
     type = "S"
   }
 
-  attribute {
-    name = "soilmoisture"
-    type = "N"
-  }
-
   ttl {
     attribute_name = "TimeToExist"
     enabled        = false
