@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "dirtbag-dynamodb-table" {
-  name           = "DirtbagReadings"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "uuid"
-  range_key      = "timestamp"
+  name         = "DirtbagReadings"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "uuid"
+  range_key    = "timestamp"
 
   attribute {
     name = "uuid"

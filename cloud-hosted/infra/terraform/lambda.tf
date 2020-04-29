@@ -5,7 +5,7 @@ resource "aws_lambda_permission" "api_gw_save_reading" {
   principal     = "apigateway.amazonaws.com"
 
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
-  source_arn = "arn:aws:execute-api:${data.aws_region.current.name}:${var.accountId}:${aws_api_gateway_rest_api.save_reading_api.id}/*/${aws_api_gateway_method.save_reading_post_method.http_method}${aws_api_gateway_resource.resource.path}"
+  source_arn = local.save_reading_api_gw_arn
 }
 
 resource "aws_lambda_function" "save_reading" {

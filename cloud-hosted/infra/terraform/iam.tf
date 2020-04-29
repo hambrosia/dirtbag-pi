@@ -1,3 +1,5 @@
+# Save Reading Lambda Permissions
+
 resource "aws_iam_role" "save_reading_role" {
   name = "dirtbag-save-reading-role"
 
@@ -18,7 +20,7 @@ resource "aws_iam_role" "save_reading_role" {
 POLICY
 }
 
-resource "aws_iam_policy" "save_reading_policy" {
+resource "aws_iam_policy" "save_reading" {
   name        = "dirtbag-dynamo-write"
   description = "Allow DirtBag Pi Save Reading Lambda to write to Dynamo"
 
@@ -50,7 +52,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "save_reading_policy_attachment" {
   role       = aws_iam_role.save_reading_role.name
-  policy_arn = aws_iam_policy.save_reading_policy.arn
+  policy_arn = aws_iam_policy.save_reading.arn
 }
 
 
@@ -98,4 +100,37 @@ resource "aws_iam_role_policy" "api_gateway_cloudwatch" {
     ]
 }
 EOF
+}
+
+# Soil Sensor Client IAM Permissions
+
+resource "aws_iam_user" "dirtbag_client" {
+  name = "dirtbag-client"
+  path = "/"
+
+  tags = {
+    tag-key = "dirtbag-pi"
+  }
+}
+
+resource "aws_iam_access_key" "dirtbag_client" {
+  user = aws_iam_user.dirtbag_client.name
+}
+resource "aws_iam_user_policy" "client_invoke_api_gateway" {
+  name   = "dirtbag-client-invoke-api-gateway"
+  user   = aws_iam_user.dirtbag_client.name
+  policy = data.aws_iam_policy_document.dirtbag_client.json
+}
+
+data "aws_iam_policy_document" "dirtbag_client" {
+  statement {
+
+    actions = [
+      "execute-api:Invoke"
+    ]
+
+    resources = [
+      local.save_reading_api_gw_arn
+    ]
+  }
 }
