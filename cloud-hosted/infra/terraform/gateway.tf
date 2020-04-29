@@ -28,6 +28,10 @@ resource "aws_api_gateway_deployment" "save_reading_deployment" {
   depends_on = [aws_api_gateway_integration.save_reading_integration]
 
   rest_api_id = aws_api_gateway_rest_api.save_reading_api.id
-  stage_name  = terraform.workspace
+  stage_name  = "DirtBagPi"
 
+}
+
+resource "aws_api_gateway_account" "api_gateway_logging_account" {
+  cloudwatch_role_arn = aws_iam_role.api_gateway_cloudwatch.arn
 }

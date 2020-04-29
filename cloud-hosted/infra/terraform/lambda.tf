@@ -1,7 +1,7 @@
 resource "aws_lambda_permission" "api_gw_save_reading" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
-  function_name = "${aws_lambda_function.save_reading.function_name}"
+  function_name = aws_lambda_function.save_reading.function_name
   principal     = "apigateway.amazonaws.com"
 
   # More: http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-control-access-using-iam-policies-to-invoke-api.html
@@ -10,9 +10,9 @@ resource "aws_lambda_permission" "api_gw_save_reading" {
 
 resource "aws_lambda_function" "save_reading" {
   filename      = "../../lambda/zip/save_reading.zip"
-  function_name = "save_soil_reading"
+  function_name = "dirtbag-save-soil-reading"
   role          = aws_iam_role.save_reading_role.arn
-  handler       = "lambda.lambda_handler"
+  handler       = "save_reading.lambda_handler"
   runtime       = "python3.7"
 
   # The filebase64sha256() function is available in Terraform 0.11.12 and later
