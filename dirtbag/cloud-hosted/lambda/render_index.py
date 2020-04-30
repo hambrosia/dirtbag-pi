@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 
+import plotly.graph_objects as go
+
 
 def get_timestamp_month_ago():
     """Return a timestamp 31 days prior to the present time"""
@@ -27,7 +29,11 @@ def lambda_handler(event, context):
         print(i)
 
     # Organize for graph
+
     # Make index.html (plotly)
+
+    fig = go.Figure()
+
     # Save to S3 (boto3)
 
     return {

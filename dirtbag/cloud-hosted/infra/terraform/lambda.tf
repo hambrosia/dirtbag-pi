@@ -22,4 +22,12 @@ resource "aws_lambda_function" "render_index" {
   handler          = "render_index.lambda_handler"
   runtime          = "python3.7"
   source_code_hash = filebase64sha256("../../lambda/zip/render_index.zip")
+  layers = [aws_lambda_layer_version.plotly_layer.arn]
+
+}
+
+resource "aws_lambda_layer_version" "plotly_layer" {
+  layer_name = "plotly_layer"
+  filename = "../../lambda/plotly-layer/plotly_layer.zip"
+  compatible_runtimes = ["python3.6", "python3.7"]
 }
