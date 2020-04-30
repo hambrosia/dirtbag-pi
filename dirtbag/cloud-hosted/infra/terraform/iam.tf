@@ -82,18 +82,35 @@ resource "aws_iam_policy" "render_index" {
 
   policy = <<EOF
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:DeleteObject"
-      ],
-      "Resource": "*"
-    }
-  ]
+   "Version":"2012-10-17",
+   "Statement":[
+      {
+         "Effect":"Allow",
+         "Action":[
+            "s3:PutObject",
+            "s3:GetObject",
+            "s3:DeleteObject"
+         ],
+         "Resource":"*"
+      },
+      {
+         "Effect":"Allow",
+         "Action":[
+            "dynamodb:BatchGet*",
+            "dynamodb:DescribeStream",
+            "dynamodb:DescribeTable",
+            "dynamodb:Get*",
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:BatchWrite*",
+            "dynamodb:CreateTable",
+            "dynamodb:Delete*",
+            "dynamodb:Update*",
+            "dynamodb:PutItem"
+         ],
+         "Resource":"arn:aws:dynamodb:us-east-2:857455201587:table/DirtbagReadings"
+      }
+   ]
 }
 EOF
 }
