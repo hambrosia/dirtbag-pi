@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
+
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
-
+from botocore.exceptions import ClientError
 import plotly.graph_objects as go
 
 # Soil reading calibration
@@ -9,7 +10,7 @@ MIN_MOISTURE = 315
 MAX_MOISTURE = 1015 - MIN_MOISTURE
 
 
-def get_timestamp_month_ago():
+def get_timestamp_month_ago() -> timedelta:
     """Return a timestamp 31 days prior to the present time"""
     month_delta = timedelta(days=31)
     return datetime.now() - month_delta
@@ -59,6 +60,17 @@ def lambda_handler(event, context):
     fig.write_html(output_path)
 
     # Save to S3 (boto3)
+    s3_client = boto3.client('s3')
+
+    bucket_name = "dirtbag-public-index"
+    file_name = "/tmp/index.html"
+    object_name = "index.html"
+
+    try:
+        response = s3_client.upload_file(file_name, bucket_name, object_name)
+    except ClientError as e:
+        logging.error(e)
+        return False
 
     return {
         'statusCode': 200,
