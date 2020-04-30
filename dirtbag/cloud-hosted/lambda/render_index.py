@@ -4,11 +4,23 @@ from boto3.dynamodb.conditions import Key, Attr
 
 import plotly.graph_objects as go
 
+# Soil reading calibration
+MIN_MOISTURE = 315
+MAX_MOISTURE = 1015 - MIN_MOISTURE
+
 
 def get_timestamp_month_ago():
     """Return a timestamp 31 days prior to the present time"""
     month_delta = timedelta(days=31)
     return datetime.now() - month_delta
+
+
+def get_soil_moisture_percent(raw_value: int) -> float:
+    """Convert raw soil moisture reading to percent """
+    if raw_value == 0:
+        return 0
+    percent = ((raw_value - MIN_MOISTURE) / MAX_MOISTURE) * 100
+    return round(percent, 2)
 
 
 def lambda_handler(event, context):
@@ -32,7 +44,19 @@ def lambda_handler(event, context):
 
     # Make index.html (plotly)
 
+    readings_last_month = response['Items']
+    timestamps = [row['timestamp'] for row in readings_last_month]
+    moisture_readings = [get_soil_moisture_percent(row['soilmoisture']) for row in readings_last_month]
+    temp_readings = [row['soiltemp'] for row in readings_last_month]
+
+    output_path = '/tmp/index.html'
+
     fig = go.Figure()
+    fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
+    fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
+
+    fig.update_layout(title='DirtBag Pi - Soil Stats', template='plotly')
+    fig.write_html(output_path)
 
     # Save to S3 (boto3)
 

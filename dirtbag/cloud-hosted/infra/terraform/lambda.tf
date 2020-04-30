@@ -13,6 +13,7 @@ resource "aws_lambda_function" "save_reading" {
   handler          = "save_reading.lambda_handler"
   runtime          = "python3.7"
   source_code_hash = filebase64sha256("../../lambda/zip/save_reading.zip")
+  timeout = 10
 }
 
 resource "aws_lambda_function" "render_index" {
@@ -23,7 +24,7 @@ resource "aws_lambda_function" "render_index" {
   runtime          = "python3.7"
   source_code_hash = filebase64sha256("../../lambda/zip/render_index.zip")
   layers = [aws_lambda_layer_version.plotly_layer.arn]
-
+  tiemout = 30
 }
 
 resource "aws_lambda_layer_version" "plotly_layer" {
