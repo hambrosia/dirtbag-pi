@@ -55,7 +55,6 @@ resource "aws_iam_role_policy_attachment" "save_reading_policy_attachment" {
 }
 
 # Render Index Lambda Permissions
-
 resource "aws_iam_role" "render_index_role" {
   name = "dirtbag-render-index-role"
 
@@ -108,7 +107,10 @@ resource "aws_iam_policy" "render_index" {
             "dynamodb:Update*",
             "dynamodb:PutItem"
          ],
-         "Resource":"arn:aws:dynamodb:us-east-2:857455201587:table/DirtbagReadings"
+         "Resource":[
+            "arn:aws:dynamodb:us-east-2:857455201587:table/DirtbagReadings",
+            "arn:aws:dynamodb:us-east-2:857455201587:table/DirtbagReadings/*"
+         ]
       }
    ]
 }
