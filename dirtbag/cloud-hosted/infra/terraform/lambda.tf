@@ -24,7 +24,8 @@ resource "aws_lambda_function" "render_index" {
   runtime          = "python3.7"
   source_code_hash = filebase64sha256("../../lambda/zip/render_index.zip")
   layers = [aws_lambda_layer_version.plotly_layer.arn]
-  tiemout = 30
+  timeout = 30
+  memory_size = 256
 }
 
 resource "aws_lambda_layer_version" "plotly_layer" {
