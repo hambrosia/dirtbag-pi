@@ -19,11 +19,12 @@ def lambda_handler(event, context):
     timestamp_one_month_ago = str(get_timestamp_month_ago())
 
     response = table.query(
-        KeyConditionExpression=Key('sensorid').eq('09e9d5b2-cf8f-4aa2-9f9b-ef9425112291') & Key('timestamp').between(timestamp_one_month_ago, timestamp_now)
+        KeyConditionExpression=Key('sensorid').eq('09e9d5b2-cf8f-4aa2-9f9b-ef9425112291') & Key('timestamp').between(
+            timestamp_one_month_ago, timestamp_now)
     )
 
-    # for i in response['Items']:
-    #     print(i)
+    for i in response['Items']:
+        print(i)
 
     # Organize for graph
     # Make index.html (plotly)
