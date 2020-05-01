@@ -1,14 +1,14 @@
 """Prepopulate database, prerender html, start scheduler"""
 from datetime import datetime
 
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 import config.config as config
 import manager.sensor_manager as sensor_manager
 import manager.request_manager as request_manager
 
 CONFIGS = config.get_configs()
-SCHEDULER = BackgroundScheduler()
+SCHEDULER = BlockingScheduler()
 
 def take_and_post_reading():
     sensor_id = CONFIGS['sensor-id']
@@ -35,10 +35,16 @@ def configure_reading_job():
 
 
 def on_startup():
-    """Validate config.json and connection to API, take a reading, start scheduler"""
+    """Take a reading, start scheduler"""
     timestamp = datetime.now()
-    print("%s: Validating config.json and cnonection to API." % timestamp)
+    print("%s: Sending first reading and configuring scheduler." % timestamp)
     
-    # Start monitor scheduler
+    # Take and send reading on startup
+    take_and_post_reading()
+    
+    # Start scheduler
     configure_reading_job()
-    SCHEDULER.start()
+    try:
+        SCHEDULER.start()
+    except (KeyboardInterrupt, SystemExit):
+        pass

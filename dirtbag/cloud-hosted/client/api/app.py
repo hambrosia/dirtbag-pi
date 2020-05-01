@@ -7,8 +7,7 @@ import manager.sensor_manager as sensor_manager
 
 def main() -> None:
     """Start scheduler"""
-    response = schedule_manager.take_and_post_reading()
-    print(response)
+    schedule_manager.on_startup()
 
 if __name__ == "__main__":
     main()
