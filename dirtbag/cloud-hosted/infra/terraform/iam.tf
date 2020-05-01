@@ -1,5 +1,5 @@
 # Save Reading Lambda Permissions
-resource "aws_iam_role" "save_reading_role" {
+resource "aws_iam_role" "save_reading" {
   name = "dirtbag-save-reading-role"
 
   assume_role_policy = <<POLICY
@@ -49,13 +49,13 @@ resource "aws_iam_policy" "save_reading" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "save_reading_policy_attachment" {
-  role       = aws_iam_role.save_reading_role.name
+resource "aws_iam_role_policy_attachment" "save_reading" {
+  role       = aws_iam_role.save_reading.name
   policy_arn = aws_iam_policy.save_reading.arn
 }
 
 # Render Index Lambda Permissions
-resource "aws_iam_role" "render_index_role" {
+resource "aws_iam_role" "render_index" {
   name = "dirtbag-render-index-role"
 
   assume_role_policy = <<POLICY
@@ -76,7 +76,7 @@ POLICY
 }
 
 resource "aws_iam_policy" "render_index" {
-  name        = "dirtbag-s3-write"
+  name        = "dirtbag-render-index"
   description = "Allow DirtBag Pi Render Index Lambda to write to S3"
 
   policy = <<EOF
@@ -117,8 +117,8 @@ resource "aws_iam_policy" "render_index" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "render_index_policy_attachment" {
-  role       = aws_iam_role.render_index_role.name
+resource "aws_iam_role_policy_attachment" "render_index" {
+  role       = aws_iam_role.render_index.name
   policy_arn = aws_iam_policy.render_index.arn
 }
 
