@@ -6,10 +6,9 @@ import manager.request_manager as request_manager
 import manager.sensor_manager as sensor_manager
 
 def main() -> None:
-    soil_moisture = sensor_manager.get_soil_moisture()
-    response = request_manager.post_reading()
+    """Start scheduler"""
+    response = schedule_manager.take_and_post_reading()
     print(response)
-
 
 if __name__ == "__main__":
     main()

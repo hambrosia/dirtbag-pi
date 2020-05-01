@@ -4,15 +4,31 @@ from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import config.config as config
+import manager.sensor_manager as sensor_manager
+import manager.request_manager as request_manager
 
 CONFIGS = config.get_configs()
 SCHEDULER = BackgroundScheduler()
 
+def take_and_post_reading():
+    sensor_id = CONFIGS['sensor-id']
+    sensor_name = CONFIGS['sensor-name']
+    soil_moisture = sensor_manager.get_soil_moisture()
+    soil_temp = sensor_manager.get_soil_temp()
+    
+    response = request_manager.post_reading(
+            sensor_id=sensor_id,
+            sensor_name=sensor_name,
+            soil_moisture=soil_moisture,
+            soil_temp=soil_temp
+            )
+    
+    return response
 
-def start_monitor():
-    """ Start scheduler to update DB and rerender index on interval"""
+def configure_reading_job():
+    """Configure scheduler to take reading"""
     polling_interval = CONFIGS['polling-interval-minutes']
-#    SCHEDULER.add_job(func="", trigger='interval', minutes=polling_interval)
+    SCHEDULER.add_job(func=take_and_post_reading, trigger='interval', minutes=polling_interval)
 
     timestamp = datetime.now()
     print("%s: Scheduler configured to take and save reading every %i minutes" % (timestamp, polling_interval))
@@ -24,5 +40,5 @@ def on_startup():
     print("%s: Validating config.json and cnonection to API." % timestamp)
     
     # Start monitor scheduler
-#    start_monitor()
-#    SCHEDULER.start()
+    configure_reading_job()
+    SCHEDULER.start()

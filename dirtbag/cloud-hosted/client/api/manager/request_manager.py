@@ -3,16 +3,16 @@ import json
 import boto3
 
 
-def post_reading():
+def post_reading(sensor_id: str, sensor_name: str, soil_moisture: int, soil_temp: float):
     
     client = boto3.client('lambda')
     
     function_name = 'dirtbag-save-soil-reading'
     reading = json.dumps({
-	"sensorid": "09e9d5b2-cf8f-4aa2-9f9b-ef9425112291",
-	"sensorname": "Matt's Living Room",
-	"soilmoisture":999, 
-	"soiltemp": "60.07"
+	"sensorid": sensor_id,
+	"sensorname": sensor_name,
+	"soilmoisture": soil_moisture, 
+	"soiltemp": str(soil_temp)
     })
 
     response = client.invoke(

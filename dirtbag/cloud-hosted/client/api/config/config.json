@@ -1,4 +1,6 @@
 {
+  "sensor-id":"09e9d5b2-cf8f-4aa2-9f9b-ef9425112291",
+  "sensor-name":"Joe's Back Yard",
   "polling-interval-minutes": 15,
   "soil-moisture-min": 315,
   "soil-moisture-max": 1015
