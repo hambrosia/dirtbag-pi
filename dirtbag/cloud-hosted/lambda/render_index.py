@@ -10,7 +10,7 @@ MIN_MOISTURE = 315
 MAX_MOISTURE = 1015 - MIN_MOISTURE
 
 
-def get_timestamp_month_ago() -> timedelta:
+def get_timestamp_month_ago() -> datetime:
     """Return a timestamp 31 days prior to the present time"""
     month_delta = timedelta(days=31)
     return datetime.now() - month_delta
@@ -66,11 +66,21 @@ def lambda_handler(event, context):
     file_name = "/tmp/index.html"
     object_name = "index.html"
 
+    # Use put_file instead of put_object to enable multipart transfer
     try:
         response = s3_client.upload_file(file_name, bucket_name, object_name)
     except ClientError as e:
         logging.error(e)
         return False
+
+    # Set content-type to text/html to enable viewing directly in browser
+    s3 = boto3.resource('s3')
+    api_client = s3.meta.client
+    response = api_client.copy_object(Bucket=bucket_name,
+                                      Key=object_name,
+                                      ContentType="text/html",
+                                      MetadataDirective="REPLACE",
+                                      CopySource=bucket_name + "/" + object_name)
 
     return {
         'statusCode': 200,
