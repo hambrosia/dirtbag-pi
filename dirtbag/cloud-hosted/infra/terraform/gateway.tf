@@ -28,7 +28,7 @@ resource "aws_api_gateway_deployment" "save_reading_deployment" {
   depends_on = [aws_api_gateway_integration.save_reading_integration]
 
   rest_api_id = aws_api_gateway_rest_api.save_reading_api.id
-  stage_name  = "DirtBagPi"
+  stage_name  = local.save_reading_api_gw_stage_name
 
 }
 

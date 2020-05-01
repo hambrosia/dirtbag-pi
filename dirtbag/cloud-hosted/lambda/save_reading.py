@@ -1,6 +1,6 @@
 from datetime import datetime
+from decimal import *
 import json
-import uuid
 
 import boto3
 
@@ -14,15 +14,18 @@ def lambda_handler(event, context):
     table = dynamodb.Table('DirtbagReadings')
     body = event['body']
     readings = json.loads(body)
-    reading_uuid = str(uuid.uuid4())
+
     reading_timestamp = str(datetime.now())
+    sensor_id = readings['sensorid']
+    sensor_name = readings['sensorname']
     reading_soilmoisture = readings['soilmoisture']
-    reading_soiltemp = readings['soiltemp']
+    reading_soiltemp = Decimal(readings['soiltemp'])
 
     response = table.put_item(
         Item={
-            'uuid': reading_uuid,
+            'sensorid': sensor_id,
             'timestamp': reading_timestamp,
+            'sensorname': sensor_name,
             'soilmoisture': reading_soilmoisture,
             'soiltemp': reading_soiltemp
         }

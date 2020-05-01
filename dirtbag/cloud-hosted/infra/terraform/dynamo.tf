@@ -1,11 +1,11 @@
 resource "aws_dynamodb_table" "dirtbag-dynamodb-table" {
   name         = "DirtbagReadings"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "uuid"
+  hash_key     = "sensorid"
   range_key    = "timestamp"
 
   attribute {
-    name = "uuid"
+    name = "sensorid"
     type = "S"
   }
 
@@ -14,13 +14,8 @@ resource "aws_dynamodb_table" "dirtbag-dynamodb-table" {
     type = "S"
   }
 
-  ttl {
-    attribute_name = "TimeToExist"
-    enabled        = false
-  }
-
   tags = {
-    Name        = "dirtbag-pi-dynamo-table"
+    Name        = "dirtbag-pi"
     Environment = local.environment
   }
 }

@@ -8,3 +8,4 @@ dirtbag/self-hosted/api/config/secret.json
 .terraform
 *.zip
 secret_vars.tf
+dirtbag/cloud-hosted/lambda/plotly-layer/python/
