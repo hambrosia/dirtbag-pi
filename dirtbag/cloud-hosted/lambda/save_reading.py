@@ -12,14 +12,12 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
 
     table = dynamodb.Table('DirtbagReadings')
-    body = event['body']
-    readings = json.loads(body)
 
     reading_timestamp = str(datetime.now())
-    sensor_id = readings['sensorid']
-    sensor_name = readings['sensorname']
-    reading_soilmoisture = readings['soilmoisture']
-    reading_soiltemp = Decimal(readings['soiltemp'])
+    sensor_id = event['sensorid']
+    sensor_name = event['sensorname']
+    reading_soilmoisture = event['soilmoisture']
+    reading_soiltemp = Decimal(event['soiltemp'])
 
     response = table.put_item(
         Item={
@@ -34,5 +32,5 @@ def lambda_handler(event, context):
     print("PutItem succeeded:")
     return {
         'statusCode': 200,
-        'body': json.dumps(readings)
+        'body': json.dumps(event)
     }

@@ -200,8 +200,8 @@ resource "aws_iam_user" "dirtbag_client" {
 resource "aws_iam_access_key" "dirtbag_client" {
   user = aws_iam_user.dirtbag_client.name
 }
-resource "aws_iam_user_policy" "client_invoke_api_gateway" {
-  name   = "dirtbag-client-invoke-api-gateway"
+resource "aws_iam_user_policy" "client_invoke_lambda" {
+  name   = "dirtbag-client-invoke-lambda"
   user   = aws_iam_user.dirtbag_client.name
   policy = data.aws_iam_policy_document.dirtbag_client.json
 }
@@ -210,11 +210,11 @@ data "aws_iam_policy_document" "dirtbag_client" {
   statement {
 
     actions = [
-      "execute-api:Invoke"
+      "lambda:InvokeFunction"
     ]
 
     resources = [
-      local.save_reading_api_gw_arn
+      aws_lambda_function.save_reading.arn
     ]
   }
 }
