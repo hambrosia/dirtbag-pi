@@ -38,9 +38,6 @@ def lambda_handler(event, context):
             timestamp_one_month_ago, timestamp_now)
     )
 
-    for i in response['Items']:
-        print(i)
-
     # Organize for graph
 
     # Make index.html (plotly)
@@ -81,6 +78,7 @@ def lambda_handler(event, context):
                                       ContentType="text/html",
                                       MetadataDirective="REPLACE",
                                       CopySource=bucket_name + "/" + object_name)
+    print(event)
 
     return {
         'statusCode': 200,
