@@ -33,3 +33,9 @@ resource "aws_lambda_layer_version" "plotly_layer" {
   filename = "../../lambda/plotly-layer/plotly_layer.zip"
   compatible_runtimes = ["python3.6", "python3.7"]
 }
+
+resource "aws_lambda_event_source_mapping" "example" {
+  event_source_arn  = aws_dynamodb_table.dirtbag-dynamodb-table.stream_arn
+  function_name     = aws_lambda_function.render_index.arn
+  starting_position = "LATEST"
+}

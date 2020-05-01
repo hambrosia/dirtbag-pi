@@ -32,14 +32,12 @@ def lambda_handler(event, context):
     table = dynamodb.Table('DirtbagReadings')
     timestamp_now = str(datetime.now())
     timestamp_one_month_ago = str(get_timestamp_month_ago())
+    sensor_id = event['sensorid']
 
     response = table.query(
-        KeyConditionExpression=Key('sensorid').eq('09e9d5b2-cf8f-4aa2-9f9b-ef9425112291') & Key('timestamp').between(
+        KeyConditionExpression=Key('sensorid').eq(sensor_id) & Key('timestamp').between(
             timestamp_one_month_ago, timestamp_now)
     )
-
-    for i in response['Items']:
-        print(i)
 
     # Organize for graph
 
@@ -81,6 +79,7 @@ def lambda_handler(event, context):
                                       ContentType="text/html",
                                       MetadataDirective="REPLACE",
                                       CopySource=bucket_name + "/" + object_name)
+    print(event)
 
     return {
         'statusCode': 200,

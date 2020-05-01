@@ -3,6 +3,8 @@ resource "aws_dynamodb_table" "dirtbag-dynamodb-table" {
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "sensorid"
   range_key    = "timestamp"
+  stream_enabled = true
+  stream_view_type = "NEW_IMAGE"
 
   attribute {
     name = "sensorid"

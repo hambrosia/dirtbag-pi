@@ -30,6 +30,15 @@ resource "aws_iam_policy" "save_reading" {
       {
          "Effect":"Allow",
          "Action":[
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+         ],
+         "Resource":"*"
+      },
+      {
+         "Effect":"Allow",
+         "Action":[
             "dynamodb:BatchGet*",
             "dynamodb:DescribeStream",
             "dynamodb:DescribeTable",
@@ -83,6 +92,15 @@ resource "aws_iam_policy" "render_index" {
 {
    "Version":"2012-10-17",
    "Statement":[
+      {
+         "Effect":"Allow",
+         "Action":[
+            "logs:CreateLogGroup",
+            "logs:CreateLogStream",
+            "logs:PutLogEvents"
+         ],
+         "Resource":"*"
+      },
       {
          "Effect":"Allow",
          "Action":[
