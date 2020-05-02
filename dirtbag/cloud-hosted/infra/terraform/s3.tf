@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "index" {
-  bucket = local.bucket_name
+  bucket_prefix = "dirtbag-graph"
   acl    = "public-read"
 
   website {
