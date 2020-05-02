@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 
 import boto3
@@ -20,5 +21,6 @@ def post_reading(sensor_id: str, sensor_name: str, soil_moisture: int, soil_temp
             InvocationType='Event',
             Payload=reading
             )
-
-    print(response)
+    
+    timestamp = datetime.now()
+    print("%s: Soil reading sent, response status code: %s" % (timestamp, response['ResponseMetadata']['HTTPStatusCode']))
