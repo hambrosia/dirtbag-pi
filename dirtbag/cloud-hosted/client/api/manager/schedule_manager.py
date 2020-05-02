@@ -12,12 +12,14 @@ SCHEDULER = BlockingScheduler()
 
 def take_and_post_reading():
     """Get sensor ID and Name from configs, take soil reading, pass to request manager"""
+    timestamp = str(datetime.now())
     sensor_id = CONFIGS['sensor-id']
     sensor_name = CONFIGS['sensor-name']
     soil_moisture = sensor_manager.get_soil_moisture()
     soil_temp = sensor_manager.get_soil_temp()
     
     response = request_manager.post_reading(
+            timestamp=timestamp,
             sensor_id=sensor_id,
             sensor_name=sensor_name,
             soil_moisture=soil_moisture,
