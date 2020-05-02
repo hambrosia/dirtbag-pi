@@ -1,11 +1,13 @@
 resource "aws_s3_bucket" "index" {
-  bucket = "dirtbag-public-index"
+  bucket = "dirtbag-public-graph"
   acl    = "public-read"
 
   website {
     index_document = "index.html"
     error_document = "error.html"
   }
+
+  force_destroy = true
 
   policy = <<EOF
 {

@@ -140,53 +140,6 @@ resource "aws_iam_role_policy_attachment" "render_index" {
   policy_arn = aws_iam_policy.render_index.arn
 }
 
-# API Gateway Permissions
-resource "aws_iam_role" "api_gateway_cloudwatch" {
-  name = "api_gateway_cloudwatch_global"
-
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "apigateway.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy" "api_gateway_cloudwatch" {
-  name = "default"
-  role = aws_iam_role.api_gateway_cloudwatch.id
-
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogGroup",
-                "logs:CreateLogStream",
-                "logs:DescribeLogGroups",
-                "logs:DescribeLogStreams",
-                "logs:PutLogEvents",
-                "logs:GetLogEvents",
-                "logs:FilterLogEvents"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
-EOF
-}
-
 # Soil Sensor Client IAM Permissions
 resource "aws_iam_user" "dirtbag_client" {
   name = "dirtbag-client"
@@ -200,8 +153,8 @@ resource "aws_iam_user" "dirtbag_client" {
 resource "aws_iam_access_key" "dirtbag_client" {
   user = aws_iam_user.dirtbag_client.name
 }
-resource "aws_iam_user_policy" "client_invoke_api_gateway" {
-  name   = "dirtbag-client-invoke-api-gateway"
+resource "aws_iam_user_policy" "client_invoke_lambda" {
+  name   = "dirtbag-client-invoke-lambda"
   user   = aws_iam_user.dirtbag_client.name
   policy = data.aws_iam_policy_document.dirtbag_client.json
 }
@@ -210,11 +163,11 @@ data "aws_iam_policy_document" "dirtbag_client" {
   statement {
 
     actions = [
-      "execute-api:Invoke"
+      "lambda:InvokeFunction"
     ]
 
     resources = [
-      local.save_reading_api_gw_arn
+      aws_lambda_function.save_reading.arn
     ]
   }
 }

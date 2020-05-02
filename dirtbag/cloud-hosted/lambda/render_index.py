@@ -21,6 +21,12 @@ def get_soil_moisture_percent(raw_value: int) -> float:
     if raw_value == 0:
         return 0
     percent = ((raw_value - MIN_MOISTURE) / MAX_MOISTURE) * 100
+    
+    if percent > 100:
+        percent = 100
+    if percent < 0:
+        percent = 0
+
     return round(percent, 2)
 
 
@@ -32,7 +38,9 @@ def lambda_handler(event, context):
     table = dynamodb.Table('DirtbagReadings')
     timestamp_now = str(datetime.now())
     timestamp_one_month_ago = str(get_timestamp_month_ago())
-    sensor_id = event['sensorid']
+    print(event)
+    sensor_id = event['Records'][0]['dynamodb']['Keys']['sensorid']['S']
+    print(sensor_id)
 
     response = table.query(
         KeyConditionExpression=Key('sensorid').eq(sensor_id) & Key('timestamp').between(
