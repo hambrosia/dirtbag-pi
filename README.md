@@ -38,6 +38,7 @@ To set up the cloud-hosted version of DirtBag Pi follow the steps below.
     * Terraform `apply` into the newly created workspace.
     * Save the client keys and the index URL
 * Set up the client on the Raspberry Pi
+    * Follow the first four steps from the self-hosted guide to set up the sensor on the Raspberry Pi.
     * Copy the client application to the Pi using either `scp` or `git clone`
     * In the home folder of the Pi, create the `.aws/credentials` and `.aws/config` files
     * `.aws/credentials` 
