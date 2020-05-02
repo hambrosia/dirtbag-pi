@@ -1,4 +1,3 @@
-from datetime import datetime
 from decimal import *
 import json
 
@@ -13,7 +12,7 @@ def lambda_handler(event, context):
 
     table = dynamodb.Table('DirtbagReadings')
 
-    reading_timestamp = str(datetime.now())
+    reading_timestamp = event['timestamp']
     sensor_id = event['sensorid']
     sensor_name = event['sensorname']
     reading_soilmoisture = event['soilmoisture']
