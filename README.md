@@ -28,8 +28,37 @@ DirtBag Pi is a network-connected garden and plant monitor written in Python for
 * To leave DirtBag running after the SSH session with the Raspberry Pi ends, use `nohup`. For example `nohup python3 app.py &` will allow for termination of the SSH session while leaving DirtBag Pi running so data collection and threshold alerting uninterrupted.
 
 ## Installation and Requirements (Cloud-Hosted)
-Work in progress.
+The cloud-hosted implementation of DirtBag Pi aims to make the garden monitor information available over the internet as well as reduce the complexity and computing needs of the sensor client. In this model, the sensor is only responsible for taking soil readings. These readings are sent to a Lambda to be validated and stored in DynamoDB. Dynamo triggers another Lambda on any changes, which renders the HTML graph and saves it to a public S3 bucket.
+![Cloud-hosted implementation](img/cloud.png?raw=true "Cloud-hosted implementation")
 
+To set up the cloud-hosted version of DirtBag Pi follow the steps below.
+* Deploy the Terraform manifest to AWS
+    * Copy `secret_vars_template.txt` to `secret_vars.tf` and update with your AWS account number.
+    * Create a workspace, e.g. `terraform workspace new dirtbag-us-east-2`
+    * Terraform `apply` into the newly created workspace.
+    * Save the client keys and the index URL
+* Set up the client on the Raspberry Pi
+    * Copy the client application to the Pi using either `scp` or `git clone`
+    * In the home folder of the Pi, create the `.aws/credentials` and `.aws/config` files
+    * `.aws/credentials` 
+      ```
+      [default]
+      aws_access_key_id=AKIAIOSFODNN7EXAMPLE
+      aws_secret_access_key=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+      ```
+      `.aws/config`
+      ```
+      [default]
+      region=us-east-2
+      output=json
+      ```
+    * Navigate to `config/config.json` and update the `sensor-id` and `sensor-name` fields to your preferred choices.
+    * In the root project folder create a virtual environment `python3 -m venv venv`
+    * Install the requirements `pip3 install -r requirements.txt`
+    * Run the application using nohup `nohup python3 app/app.py &` 
+* Confirm it all works by navigating to the index URL that was output during the Terraform apply. You should see a graph of soil moisture and temperature readings, however it will only have one value since the application just started recording readings. 
+      
+    
 ## Understanding the Output
 * Soil capacitance readings are returned by the sensor as a value between 200 and 2000. In practice, the raw readings range between ~315 (exposure to fresh Los Angeles air) and ~1015 (submersion in tap water). DirtBag converts the raw capacitance reading to an approximate moisture percent value calibrated for LA air and water and rounded to two decimal points.
 * Soil temperature readings are returned natively by the sensor in Celsius and displayed to the user in Celsius.
@@ -39,5 +68,5 @@ Work in progress.
 * Part 1 (DONE): Displays a webpage on the local network that shows the soil moisture and temperature.
 * Part 2 (DONE): The webpage displays historical data including graphs and averages that persist on reboot of the Raspberry Pi.
 * Part 3 (DONE): Threshold alerting to send an email if moisture readings are outside of a specified range.
-* Part 4: Split sensor client from webserver and database. Host the database and webpage in the cloud.
+* Part 4: (DONE) Split sensor client from webserver and database. Host the database and webpage in the cloud.
 * Part 5: Support for multiple sensor clients with unique sensor IDs.
