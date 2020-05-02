@@ -1,3 +1,4 @@
+"""Post readings to Lambda for processing"""
 from datetime import datetime
 import json
 
@@ -5,7 +6,7 @@ import boto3
 
 
 def post_reading(sensor_id: str, sensor_name: str, soil_moisture: int, soil_temp: float):
-    
+    """Takes sensor id, sensor name, soil moisture, and temp and sends to AWS Lambda, logs response to console"""
     client = boto3.client('lambda')
     
     function_name = 'dirtbag-save-soil-reading'

@@ -25,10 +25,3 @@ def get_soil_temp():
     """Return soil temp in Celsius"""
     return round(SS.get_temp(), 2)
 
-
-def get_soil_moisture_percent(raw_value: int) -> float:
-    """Convert raw soil moisture reading to percent """
-    if raw_value == 0:
-        return 0
-    percent = ((raw_value - MIN_MOISTURE) / MAX_MOISTURE) * 100
-    return round(percent, 2)
