@@ -7,6 +7,8 @@ resource "aws_s3_bucket" "index" {
     error_document = "error.html"
   }
 
+  force_destroy = true
+
   policy = <<EOF
 {
   "Version": "2008-10-17",
