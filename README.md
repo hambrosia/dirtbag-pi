@@ -35,6 +35,7 @@ To set up the cloud-hosted version of DirtBag Pi follow the steps below.
 * Deploy the Terraform manifest to AWS
     * Copy `secret_vars_template.txt` to `secret_vars.tf` and update with your AWS account number.
     * Create a workspace, e.g. `terraform workspace new dirtbag-us-east-2`
+    * Use `zip_lambdas.sh` and `make_layer.sh` scripts to zip the Lambda functions and layers.
     * Terraform `apply` into the newly created workspace.
     * Save the client keys and the index URL
 * Set up the client on the Raspberry Pi
