@@ -6,7 +6,7 @@ DirtBag Pi is a network-connected garden and plant monitor written in Python for
 ![DirtBag Pi](img/dbp.jpg?raw=true "DirtBag Pi")
 
 ## Installation and Requirements (Self-Hosted)
-* Use an [Adafruit STEMMA Soil Sensor](https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-sensor/python-circuitpython-test)
+* Use an [Adafruit STEMMA Soil Sensor](https://www.adafruit.com/product/4026)
 * Connect the sensor to the [proper pins](https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-sensor/python-circuitpython-test).
     * Pi 3V3 to sensor VIN
     * Pi GND to sensor GND
@@ -38,7 +38,7 @@ To set up the cloud-hosted version of DirtBag Pi follow the steps below.
     * Terraform `apply` into the newly created workspace.
     * Save the client keys and the index URL
 * Set up the client on the Raspberry Pi
-    * Follow the first four steps from the self-hosted guide to set up the sensor on the Raspberry Pi.
+    * Follow the first five steps from the self-hosted guide to set up the sensor on the Raspberry Pi.
     * Copy the client application to the Pi using either `scp` or `git clone`
     * In the home folder of the Pi, create the `.aws/credentials` and `.aws/config` files
     * `.aws/credentials` 
@@ -69,5 +69,5 @@ To set up the cloud-hosted version of DirtBag Pi follow the steps below.
 * Part 1 (DONE): Displays a webpage on the local network that shows the soil moisture and temperature.
 * Part 2 (DONE): The webpage displays historical data including graphs and averages that persist on reboot of the Raspberry Pi.
 * Part 3 (DONE): Threshold alerting to send an email if moisture readings are outside of a specified range.
-* Part 4: (DONE) Split sensor client from webserver and database. Host the database and webpage in the cloud.
+* Part 4 (DONE): Split sensor client from webserver and database. Host the database and webpage in the cloud.
 * Part 5: Support for multiple sensor clients with unique sensor IDs.
