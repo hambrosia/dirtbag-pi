@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import os
 
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
@@ -21,7 +22,7 @@ def get_soil_moisture_percent(raw_value: int) -> float:
     if raw_value == 0:
         return 0
     percent = ((raw_value - MIN_MOISTURE) / MAX_MOISTURE) * 100
-    
+
     if percent > 100:
         percent = 100
     if percent < 0:
@@ -31,44 +32,37 @@ def get_soil_moisture_percent(raw_value: int) -> float:
 
 
 def lambda_handler(event, context):
-    # Should be triggered on table update. Will use sensor id
-    # Return readings between timestamps (boto3)
+    """Gets recent readings from database, prepares as html graph with Plotly, saves to S3"""
 
+    # Get recent readings from database
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('DirtbagReadings')
     timestamp_now = str(datetime.now())
     timestamp_one_month_ago = str(get_timestamp_month_ago())
-    print(event)
     sensor_id = event['Records'][0]['dynamodb']['Keys']['sensorid']['S']
-    print(sensor_id)
 
     response = table.query(
         KeyConditionExpression=Key('sensorid').eq(sensor_id) & Key('timestamp').between(
             timestamp_one_month_ago, timestamp_now)
     )
 
-    # Organize for graph
-
-    # Make index.html (plotly)
-
+    # Prepare readings for display as graph
     readings_last_month = response['Items']
     timestamps = [row['timestamp'] for row in readings_last_month]
     moisture_readings = [get_soil_moisture_percent(row['soilmoisture']) for row in readings_last_month]
     temp_readings = [row['soiltemp'] for row in readings_last_month]
 
+    # Render graph, save to /tmp
     output_path = '/tmp/index.html'
-
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
     fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
-
     fig.update_layout(title='DirtBag Pi - Soil Stats', template='plotly')
     fig.write_html(output_path)
 
-    # Save to S3 (boto3)
+    # Save graph to S3 (boto3)
     s3_client = boto3.client('s3')
-
-    bucket_name = "dirtbag-public-index"
+    bucket_name = os.environ['OUTPUT_BUCKET']
     file_name = "/tmp/index.html"
     object_name = "index.html"
 
@@ -88,8 +82,4 @@ def lambda_handler(event, context):
                                       MetadataDirective="REPLACE",
                                       CopySource=bucket_name + "/" + object_name)
     print(event)
-
-    return {
-        'statusCode': 200,
-        'body': ""
-    }
+    return
