@@ -14,11 +14,16 @@ def validate_body(event, keys) -> bool:
         if event[key] is None:
             return False
 
-    if event['soiltemp'] > 100 or event['soiltemp'] < -100:
+    soil_temp = float(event['soiltemp'])
+    soil_moisture = int(event['soilmoisture'])
+
+    if soil_temp > 100 or soil_temp < -100:
         return False
 
-    if event['soilmoisture'] > 2000 or event['soilmoisture'] < 200:
+    if soil_moisture > 2000 or soil_moisture < 200:
         return False
+
+    return True
 
 
 def lambda_handler(event, context):
