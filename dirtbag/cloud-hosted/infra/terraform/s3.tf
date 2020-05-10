@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "index" {
-  bucket_prefix = "dirtbag-graph"
+  bucket_prefix = var.graph_bucket_prefix
   acl    = "public-read"
 
   website {
@@ -9,20 +9,10 @@ resource "aws_s3_bucket" "index" {
 
   force_destroy = true
 
-  policy = <<EOF
-{
-  "Version": "2008-10-17",
-  "Statement": [
-    {
-      "Sid": "PublicReadForGetBucketObjects",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "*"
-      },
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::dirtbag-public-index/*"
-    }
-  ]
 }
-EOF
+
+resource "aws_s3_bucket_policy" "index" {
+  bucket = aws_s3_bucket.index.id
+  policy = data.aws_iam_policy_document.graph_bucket_public.json
 }
+

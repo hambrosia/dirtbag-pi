@@ -18,6 +18,13 @@ resource "aws_lambda_function" "render_index" {
   layers = [aws_lambda_layer_version.plotly_layer.arn]
   timeout = 30
   memory_size = 256
+
+  environment {
+    variables = {
+      OUTPUT_BUCKET = aws_s3_bucket.index.id
+    }
+  }
+
 }
 
 resource "aws_lambda_layer_version" "plotly_layer" {

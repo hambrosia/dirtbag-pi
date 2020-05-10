@@ -4,12 +4,41 @@ import json
 import boto3
 
 
+def validate_body(event, keys) -> bool:
+    """Validate event body has all required keys and they are non-null, boundary check
+    Return: True (event body valid), False (invalid body)
+    """
+    for key in keys:
+        if key not in event:
+            return False
+        if event[key] is None:
+            return False
+
+    soil_temp = float(event['soiltemp'])
+    soil_moisture = int(event['soilmoisture'])
+
+    if soil_temp > 100 or soil_temp < -100:
+        return False
+
+    if soil_moisture > 2000 or soil_moisture < 200:
+        return False
+
+    return True
+
+
 def lambda_handler(event, context):
+    """Validate event body, save to database"""
+
     print("Validating event body")
-    # Do some validation here
+    keys = ['timestamp', 'sensorid', 'sensorname', 'soilmoisture', 'soiltemp']
+    body_valid = validate_body(event=event, keys=keys)
+    if not body_valid:
+        return {
+            'statusCode': 400,
+            'body': json.dumps(event)
+        }
 
     dynamodb = boto3.resource('dynamodb')
-
     table = dynamodb.Table('DirtbagReadings')
 
     reading_timestamp = event['timestamp']
@@ -28,7 +57,7 @@ def lambda_handler(event, context):
         }
     )
 
-    print("PutItem succeeded:")
+    print("Saved soil reading to database")
     return {
         'statusCode': 200,
         'body': json.dumps(event)

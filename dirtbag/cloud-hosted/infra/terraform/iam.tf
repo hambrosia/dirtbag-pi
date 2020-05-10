@@ -105,8 +105,7 @@ resource "aws_iam_policy" "render_index" {
          "Effect":"Allow",
          "Action":[
             "s3:PutObject",
-            "s3:GetObject",
-            "s3:DeleteObject"
+            "s3:GetObject"
          ],
          "Resource":"*"
       },
@@ -118,16 +117,11 @@ resource "aws_iam_policy" "render_index" {
             "dynamodb:DescribeTable",
             "dynamodb:Get*",
             "dynamodb:Query",
-            "dynamodb:Scan",
-            "dynamodb:BatchWrite*",
-            "dynamodb:CreateTable",
-            "dynamodb:Delete*",
-            "dynamodb:Update*",
-            "dynamodb:PutItem"
+            "dynamodb:Scan"
          ],
          "Resource":[
-            "arn:aws:dynamodb:us-east-2:857455201587:table/DirtbagReadings",
-            "arn:aws:dynamodb:us-east-2:857455201587:table/DirtbagReadings/*"
+            "arn:aws:dynamodb:us-east-2:857455201587:table/${aws_dynamodb_table.dirtbag-dynamodb-table.id}",
+            "arn:aws:dynamodb:us-east-2:857455201587:table/${aws_dynamodb_table.dirtbag-dynamodb-table.id}/*"
          ]
       }
    ]
@@ -169,5 +163,23 @@ data "aws_iam_policy_document" "dirtbag_client" {
     resources = [
       aws_lambda_function.save_reading.arn
     ]
+  }
+}
+
+
+data "aws_iam_policy_document" "graph_bucket_public" {
+  statement {
+    principals {
+      identifiers = ["*"]
+      type = "AWS"
+    }
+    	actions = [
+			"s3:GetObject"
+    	]
+
+    	resources = [
+    		aws_s3_bucket.index.arn,
+    		"${aws_s3_bucket.index.arn}/*"
+    	]
   }
 }
