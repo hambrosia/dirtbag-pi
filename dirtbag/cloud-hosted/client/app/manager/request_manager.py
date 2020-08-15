@@ -6,12 +6,14 @@ import boto3
 
 from ..config import config
 
+CONFIGS = config.get_configs()
+
 
 def post_reading(sensor_id: str, sensor_name: str, timestamp: str, soil_moisture: int, soil_temp: float):
     """Takes sensor id, sensor name, soil moisture, and temp and sends to AWS Lambda, logs response to console"""
 
     client = boto3.client('lambda')
-    function_name = config.get_configs('lambda-function-name')
+    function_name = CONFIGS['lambda-function-name']
 
     reading = json.dumps({
         "timestamp": timestamp,
