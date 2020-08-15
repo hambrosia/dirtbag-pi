@@ -3,5 +3,6 @@
   "sensor-name":"Joe's Back Yard",
   "polling-interval-minutes": 15,
   "soil-moisture-min": 315,
-  "soil-moisture-max": 1015
+  "soil-moisture-max": 1015,
+  "lambda-function-name": "dirtbag-example-save-soil-reading"
 }

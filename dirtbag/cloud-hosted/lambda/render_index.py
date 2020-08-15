@@ -36,10 +36,14 @@ def lambda_handler(event, context):
 
     # Get recent readings from database
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('DirtbagReadings')
+    table_name = os.environ.get('TABLE_NAME')
+    table = dynamodb.Table(table_name)
     timestamp_now = str(datetime.now())
+    print(timestamp_now)
     timestamp_one_month_ago = str(get_timestamp_month_ago())
+    print(timestamp_one_month_ago)
     sensor_id = event['Records'][0]['dynamodb']['Keys']['sensorid']['S']
+
 
     response = table.query(
         KeyConditionExpression=Key('sensorid').eq(sensor_id) & Key('timestamp').between(
@@ -48,6 +52,7 @@ def lambda_handler(event, context):
 
     # Prepare readings for display as graph
     readings_last_month = response['Items']
+    print(len(readings_last_month))
     timestamps = [row['timestamp'] for row in readings_last_month]
     moisture_readings = [get_soil_moisture_percent(row['soilmoisture']) for row in readings_last_month]
     temp_readings = [row['soiltemp'] for row in readings_last_month]
@@ -63,6 +68,7 @@ def lambda_handler(event, context):
     # Save graph to S3 (boto3)
     s3_client = boto3.client('s3')
     bucket_name = os.environ['OUTPUT_BUCKET']
+    print(bucket_name)
     file_name = "/tmp/index.html"
     object_name = "index.html"
 

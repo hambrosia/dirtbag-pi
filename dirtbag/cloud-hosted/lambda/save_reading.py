@@ -1,5 +1,6 @@
 from decimal import *
 import json
+import os
 
 import boto3
 
@@ -39,7 +40,8 @@ def lambda_handler(event, context):
         }
 
     dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('DirtbagReadings')
+    table_name = os.environ['TABLE_NAME']
+    table = dynamodb.Table(table_name)
 
     reading_timestamp = event['timestamp']
     sensor_id = event['sensorid']

@@ -1,4 +1,4 @@
-"""Project-wide definitions, especially for root path currently"""
+"""Project-wide definitions"""
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent
