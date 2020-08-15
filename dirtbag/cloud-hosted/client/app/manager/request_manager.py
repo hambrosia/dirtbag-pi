@@ -4,12 +4,14 @@ import json
 
 import boto3
 
+from ..config import config
+
 
 def post_reading(sensor_id: str, sensor_name: str, timestamp: str, soil_moisture: int, soil_temp: float):
     """Takes sensor id, sensor name, soil moisture, and temp and sends to AWS Lambda, logs response to console"""
 
     client = boto3.client('lambda')
-    function_name = 'dirtbag-save-soil-reading'
+    function_name = config.get_configs('lambda-function-name')
 
     reading = json.dumps({
         "timestamp": timestamp,

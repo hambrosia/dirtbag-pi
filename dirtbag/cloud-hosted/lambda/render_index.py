@@ -64,7 +64,6 @@ def lambda_handler(event, context):
     fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
     fig.update_layout(title='DirtBag Pi - Soil Stats', template='plotly')
     fig.write_html(output_path)
-
     # Save graph to S3 (boto3)
     s3_client = boto3.client('s3')
     bucket_name = os.environ['OUTPUT_BUCKET']
