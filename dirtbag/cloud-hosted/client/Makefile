@@ -8,4 +8,5 @@ run:
 	python3 app/app.py
 
 run-nohup:
+	. dirtbag-venv/bin/activate
 	nohup python3 app/app.py &
