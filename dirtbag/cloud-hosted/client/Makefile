@@ -4,6 +4,7 @@ install:
 	pip3 install -r requirements.txt
 
 run:
+	. dirtbag-venv/bin/activate
 	python3 app/app.py
 
 run-nohup:
