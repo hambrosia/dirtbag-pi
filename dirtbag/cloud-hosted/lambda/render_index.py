@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 
 import boto3
@@ -11,10 +11,10 @@ MIN_MOISTURE = 315
 MAX_MOISTURE = 1015 - MIN_MOISTURE
 
 
-def get_timestamp_month_ago() -> datetime:
-    """Return a timestamp 31 days prior to the present time"""
+def get_timestamp_month_ago(timestamp: datetime) -> datetime:
+    """Return a timestamp 31 days prior to the provided time"""
     month_delta = timedelta(days=31)
-    return datetime.now() - month_delta
+    return timestamp - month_delta
 
 
 def get_soil_moisture_percent(raw_value: int) -> float:
@@ -38,11 +38,10 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table_name = os.environ.get('TABLE_NAME')
     table = dynamodb.Table(table_name)
-    timestamp_now = str(datetime.now())
-    print(timestamp_now)
-    timestamp_one_month_ago = str(get_timestamp_month_ago())
-    print(timestamp_one_month_ago)
-    sensor_id = event['Records'][0]['dynamodb']['Keys']['sensorid']['S']
+    datetime_now = datetime.now(tz=timezone.utc)
+    timestamp_one_month_ago = str(get_timestamp_month_ago(datetime_now))
+    timestamp_now = str(datetime_now)
+    sensor_id = str(event['Records'][0]['dynamodb']['Keys']['sensorid']['S'])
 
 
     response = table.query(
@@ -52,7 +51,7 @@ def lambda_handler(event, context):
 
     # Prepare readings for display as graph
     readings_last_month = response['Items']
-    print(len(readings_last_month))
+
     timestamps = [row['timestamp'] for row in readings_last_month]
     moisture_readings = [get_soil_moisture_percent(row['soilmoisture']) for row in readings_last_month]
     temp_readings = [row['soiltemp'] for row in readings_last_month]
@@ -62,12 +61,12 @@ def lambda_handler(event, context):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
     fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
-    fig.update_layout(title='DirtBag Pi - Soil Stats', template='plotly')
+    fig.update_layout(title=f'DirtBag Pi - Soil Stats - {timestamp_now}', template='plotly')
     fig.write_html(output_path)
+
     # Save graph to S3 (boto3)
     s3_client = boto3.client('s3')
     bucket_name = os.environ['OUTPUT_BUCKET']
-    print(bucket_name)
     file_name = "/tmp/index.html"
     object_name = "index.html"
 
