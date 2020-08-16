@@ -1,5 +1,5 @@
 """Prepopulate database, prerender html, start scheduler"""
-from datetime import datetime
+from datetime import datetime, timezone
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
@@ -12,7 +12,7 @@ SCHEDULER = BlockingScheduler()
 
 def take_and_post_reading():
     """Get sensor ID and Name from configs, take soil reading, pass to request manager"""
-    timestamp = str(datetime.now())
+    timestamp = str(datetime.now(tz=timezone.utc))
     sensor_id = CONFIGS['sensor-id']
     sensor_name = CONFIGS['sensor-name']
     soil_moisture = sensor_manager.get_soil_moisture()
@@ -32,13 +32,13 @@ def configure_reading_job():
     polling_interval = CONFIGS['polling-interval-minutes']
     SCHEDULER.add_job(func=take_and_post_reading, trigger='interval', minutes=polling_interval)
 
-    timestamp = datetime.now()
+    timestamp = datetime.now(tz=timezone.utc)
     print("%s: Scheduler configured to take and save reading every %i minutes" % (timestamp, polling_interval))
 
 
 def on_startup():
     """Take a reading, start scheduler"""
-    timestamp = datetime.now()
+    timestamp = datetime.now(tz=timezone.utc)
     print("%s: Sending first reading and configuring scheduler." % timestamp)
     
     # Take and send reading on startup

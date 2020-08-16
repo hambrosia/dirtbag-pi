@@ -1,5 +1,5 @@
 """Post readings to Lambda for processing"""
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 
 import boto3
@@ -29,6 +29,6 @@ def post_reading(sensor_id: str, sensor_name: str, timestamp: str, soil_moisture
         Payload=reading
     )
 
-    timestamp = datetime.now()
+    timestamp = datetime.now(tz=timezone.utc)
     print(
         "%s: Soil reading sent, response status code: %s" % (timestamp, response['ResponseMetadata']['HTTPStatusCode']))
