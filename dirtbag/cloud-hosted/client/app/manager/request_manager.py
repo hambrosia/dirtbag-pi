@@ -4,7 +4,7 @@ import json
 
 import boto3
 
-from ..config import config
+from config import config
 
 CONFIGS = config.get_configs()
 
