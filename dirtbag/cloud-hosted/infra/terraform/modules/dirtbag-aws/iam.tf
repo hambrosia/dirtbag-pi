@@ -147,6 +147,7 @@ resource "aws_iam_user" "dirtbag_client" {
 resource "aws_iam_access_key" "dirtbag_client" {
   user = aws_iam_user.dirtbag_client.name
 }
+
 resource "aws_iam_user_policy" "client_invoke_lambda" {
   name   = "${var.instantiation_name}-client-invoke-lambda"
   user   = aws_iam_user.dirtbag_client.name
@@ -166,7 +167,6 @@ data "aws_iam_policy_document" "dirtbag_client" {
   }
 }
 
-
 data "aws_iam_policy_document" "graph_bucket_public" {
   statement {
     principals {
@@ -182,4 +182,56 @@ data "aws_iam_policy_document" "graph_bucket_public" {
     		"${aws_s3_bucket.index.arn}/*"
     	]
   }
+}
+
+resource "aws_iam_role" "read_s3_graph" {
+  name = "${var.instantiation_name}-read-s3-graph"
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "cognito-identity.amazonaws.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "cognito-identity.amazonaws.com:aud": "us-east-1:12345678-corner-cafe-123456790ab"
+        },
+        "ForAnyValue:StringLike": {
+          "cognito-identity.amazonaws.com:amr": "authenticated"
+        }
+      }
+    }
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_policy" "read_s3_graph" {
+  name        = "${var.instantiation_name}-read-s3-graph"
+  description = "Allow DirtBag Pi UI to read graph from S3"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+      ],
+      "Resource": ["${aws_s3_bucket.index.arn}/*"]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "read_s3_graph" {
+  role       = aws_iam_role.read_s3_graph.name
+  policy_arn = aws_iam_policy.read_s3_graph.arn
 }
