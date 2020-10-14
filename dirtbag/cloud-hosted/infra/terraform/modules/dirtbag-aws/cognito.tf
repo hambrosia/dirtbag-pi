@@ -1,4 +1,4 @@
-resource "aws_cognito_user_pool" "cognito-user-pool" {
+resource "aws_cognito_user_pool" "cognito_user_pool" {
   name = "${var.instantiation_name}-cognito-user-pool"
 
   admin_create_user_config {
@@ -7,13 +7,13 @@ resource "aws_cognito_user_pool" "cognito-user-pool" {
 
 }
 
-resource "aws_cognito_identity_pool" "cognito-id-pool" {
-  identity_pool_name = "${replace(var.instantiation_name, "-", " ")} cognito id pool"
+resource "aws_cognito_identity_pool" "cognito_id_pool" {
+  identity_pool_name = "${replace(var.instantiation_name, "-", "")}CognitoIdPool"
   allow_unauthenticated_identities = false
 
   cognito_identity_providers {
-    client_id = aws_cognito_user_pool.cognito-user-pool.id
-    provider_name = aws_cognito_user_pool.cognito-user-pool.name
+    client_id = aws_cognito_user_pool.cognito_user_pool.id
+    provider_name = aws_cognito_user_pool.cognito_user_pool.name
     server_side_token_check = false
   }
 }
