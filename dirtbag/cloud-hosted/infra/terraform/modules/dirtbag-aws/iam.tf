@@ -184,6 +184,7 @@ data "aws_iam_policy_document" "graph_bucket_public" {
   }
 }
 
+# Client can read from S3 permissions
 resource "aws_iam_role" "read_s3_graph" {
   name = "${var.instantiation_name}-read-s3-graph"
   assume_role_policy = <<POLICY
@@ -215,20 +216,18 @@ resource "aws_iam_policy" "read_s3_graph" {
   name        = "${var.instantiation_name}-read-s3-graph"
   description = "Allow DirtBag Pi UI to read graph from S3"
 
-  policy = <<EOF
+  policy = <<POLICY
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "s3:GetObject",
-      ],
-      "Resource": ["${aws_s3_bucket.index.arn}/*"]
-    }
-  ]
+	"Version": "2012-10-17",
+	"Statement": [{
+		"Effect": "Allow",
+		"Action": [
+			"s3:GetObject"
+		],
+		"Resource": "${aws_s3_bucket.index.arn}/*"
+	}]
 }
-EOF
+POLICY
 }
 
 resource "aws_iam_role_policy_attachment" "read_s3_graph" {

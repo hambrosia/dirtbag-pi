@@ -14,5 +14,4 @@ terraform {
 module "dirtbag_instantiation" {
   source = "../../modules/dirtbag-aws"
   instantiation_name = "dirtbag-example"
-  lambda_dir_path = "../../../../lambda"
 }
