@@ -5,28 +5,6 @@ DirtBag Pi is a network-connected garden and plant monitor written in Python for
 
 ![DirtBag Pi](img/dbp.jpg?raw=true "DirtBag Pi")
 
-## Installation and Requirements (Self-Hosted)
-* Use an [Adafruit STEMMA Soil Sensor](https://www.adafruit.com/product/4026)
-* Connect the sensor to the [proper pins](https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-sensor/python-circuitpython-test).
-    * Pi 3V3 to sensor VIN
-    * Pi GND to sensor GND
-    * Pi SCL to Sensor SCL
-    * Pi SDA to sensor SDA
-* Enable I2C on the Raspberry Pi: `sudo raspi-config` then select interfaces, followed by I2C. Select `Enable` and exit.
-* Raspberry Pi should also have `pip3` installed: `sudo apt-get install python3-pip`
-* Install the requirements: `pip3 install -r requirements.txt`
-* Setup the Postgres database
-    * Assume the root postgres user `sudo su postgres`
-    * Create a user for the pi (or your current username) `createuser pi -P --interactive;`
-    * Create a database called dirtbag `create database dirtbag;`
-    * Create a table caleld readings `create table readings(uuid uuid, timestamp timestamp, soilmoisture float, soiltemp float);`
-    * Grant the user you created (pi) privileges to modify the database `GRANT ALL PRIVILEGES ON DATABASE dirtbag TO pi;`
-* Copy the secrets template, e.g. `cp api/config/secret-template.json api/config/secret.json` and populate with the correct database configuration based on the last step as well as e-mail account, password, and SMTP settings. `secret.json` is ignored by default, but exercise caution and carefully review your commits to ensure no secrets are published to your version control platform.
-* Get the IP of your Raspberry Pi: `ip addr`
-* Start the Flask application: `python3 api.py`
-* Navigate to `http://<ip-addr-of-pi>:5000` and the soil moisture and soil temperature readings will be shown.
-* To leave DirtBag running after the SSH session with the Raspberry Pi ends, use `nohup`. For example `nohup python3 app.py &` will allow for termination of the SSH session while leaving DirtBag Pi running so data collection and threshold alerting uninterrupted.
-
 ## Installation and Requirements (Cloud-Hosted)
 The cloud-hosted implementation of DirtBag Pi aims to make the garden monitor information available over the internet as well as reduce the complexity and computing needs of the sensor client. In this model, the sensor is only responsible for taking soil readings. These readings are sent to a Lambda to be validated and stored in DynamoDB. Dynamo triggers another Lambda on any changes, which renders the HTML graph and saves it to a public S3 bucket.
 ![Cloud-hosted implementation](img/cloud.png?raw=true "Cloud-hosted implementation")
@@ -59,8 +37,29 @@ To set up the cloud-hosted version of DirtBag Pi follow the steps below.
     * Install the requirements `pip3 install -r requirements.txt`
     * Run the application using nohup `nohup python3 app/app.py &` 
 * Confirm it all works by navigating to the index URL that was output during the Terraform apply. You should see a graph of soil moisture and temperature readings, however it will only have one value since the application just started recording readings. 
-      
-    
+
+## Installation and Requirements (Self-Hosted)
+* Use an [Adafruit STEMMA Soil Sensor](https://www.adafruit.com/product/4026)
+* Connect the sensor to the [proper pins](https://learn.adafruit.com/adafruit-stemma-soil-sensor-i2c-capacitive-moisture-sensor/python-circuitpython-test).
+    * Pi 3V3 to sensor VIN
+    * Pi GND to sensor GND
+    * Pi SCL to Sensor SCL
+    * Pi SDA to sensor SDA
+* Enable I2C on the Raspberry Pi: `sudo raspi-config` then select interfaces, followed by I2C. Select `Enable` and exit.
+* Raspberry Pi should also have `pip3` installed: `sudo apt-get install python3-pip`
+* Install the requirements: `pip3 install -r requirements.txt`
+* Setup the Postgres database
+    * Assume the root postgres user `sudo su postgres`
+    * Create a user for the pi (or your current username) `createuser pi -P --interactive;`
+    * Create a database called dirtbag `create database dirtbag;`
+    * Create a table caleld readings `create table readings(uuid uuid, timestamp timestamp, soilmoisture float, soiltemp float);`
+    * Grant the user you created (pi) privileges to modify the database `GRANT ALL PRIVILEGES ON DATABASE dirtbag TO pi;`
+* Copy the secrets template, e.g. `cp api/config/secret-template.json api/config/secret.json` and populate with the correct database configuration based on the last step as well as e-mail account, password, and SMTP settings. `secret.json` is ignored by default, but exercise caution and carefully review your commits to ensure no secrets are published to your version control platform.
+* Get the IP of your Raspberry Pi: `ip addr`
+* Start the Flask application: `python3 api.py`
+* Navigate to `http://<ip-addr-of-pi>:5000` and the soil moisture and soil temperature readings will be shown.
+* To leave DirtBag running after the SSH session with the Raspberry Pi ends, use `nohup`. For example `nohup python3 app.py &` will allow for termination of the SSH session while leaving DirtBag Pi running so data collection and threshold alerting uninterrupted.  
+ 
 ## Understanding the Output
 * Soil capacitance readings are returned by the sensor as a value between 200 and 2000. In practice, the raw readings range between ~315 (exposure to fresh Los Angeles air) and ~1015 (submersion in tap water). DirtBag converts the raw capacitance reading to an approximate moisture percent value calibrated for LA air and water and rounded to two decimal points.
 * Soil temperature readings are returned natively by the sensor in Celsius and displayed to the user in Celsius.
