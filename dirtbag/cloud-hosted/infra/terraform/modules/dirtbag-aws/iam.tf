@@ -171,22 +171,22 @@ data "aws_iam_policy_document" "graph_bucket_public" {
   statement {
     principals {
       identifiers = ["*"]
-      type = "AWS"
+      type        = "AWS"
     }
-    	actions = [
-			"s3:GetObject"
-    	]
+    actions = [
+      "s3:GetObject"
+    ]
 
-    	resources = [
-    		aws_s3_bucket.index.arn,
-    		"${aws_s3_bucket.index.arn}/*"
-    	]
+    resources = [
+      aws_s3_bucket.index.arn,
+      "${aws_s3_bucket.index.arn}/*"
+    ]
   }
 }
 
 # Client can read from S3 permissions
 resource "aws_iam_role" "dirtbag_web_ui_authenticated" {
-  name = "${var.instantiation_name}-web-ui-authenticated"
+  name               = "${var.instantiation_name}-web-ui-authenticated"
   assume_role_policy = <<POLICY
 {
   "Version": "2012-10-17",

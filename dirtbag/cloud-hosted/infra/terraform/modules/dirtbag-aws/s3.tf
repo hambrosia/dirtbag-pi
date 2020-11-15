@@ -1,6 +1,6 @@
 resource "aws_s3_bucket" "index" {
   bucket_prefix = local.graph_prefix
-  acl    = "public-read"
+  acl           = "public-read"
 
   website {
     index_document = "index.html"
