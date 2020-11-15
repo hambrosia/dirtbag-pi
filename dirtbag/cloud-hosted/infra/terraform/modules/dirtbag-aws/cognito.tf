@@ -28,3 +28,10 @@ resource "aws_cognito_identity_pool" "dirtbag_ui_app_id_pool" {
     server_side_token_check = false
   }
 }
+
+resource "aws_cognito_identity_pool_roles_attachment" "dirbag_ui_role_attach" {
+  identity_pool_id = aws_cognito_identity_pool.dirtbag_ui_app_id_pool.id
+  roles = {
+    "authenticated" = aws_iam_role.dirtbag_web_ui_authenticated.arn
+  }
+}
