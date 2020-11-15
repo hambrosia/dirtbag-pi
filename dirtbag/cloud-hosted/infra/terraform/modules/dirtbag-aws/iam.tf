@@ -186,7 +186,7 @@ data "aws_iam_policy_document" "graph_bucket_public" {
 
 # Client can read from S3 permissions
 resource "aws_iam_role" "dirtbag_web_ui_authenticated" {
-  name = "${var.instantiation_name}-read-s3-graph"
+  name = "${var.instantiation_name}-web-ui-authenticated"
   assume_role_policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -200,7 +200,7 @@ resource "aws_iam_role" "dirtbag_web_ui_authenticated" {
       "Action": "sts:AssumeRoleWithWebIdentity",
       "Condition": {
         "StringEquals": {
-          "cognito-identity.amazonaws.com:aud": "${aws_cognito_identity_pool.dirtbag_ui_app_id_pool.id}"
+          "cognito-identity.amazonaws.com:aud": "${aws_cognito_identity_pool.dirtbag_ui_id_pool.id}"
         },
         "ForAnyValue:StringLike": {
           "cognito-identity.amazonaws.com:amr": "authenticated"
@@ -213,8 +213,8 @@ POLICY
 }
 
 resource "aws_iam_policy" "dirtbag_web_ui_authenticated" {
-  name        = "${var.instantiation_name}-read-s3-graph"
-  description = "Allow DirtBag Pi UI to read graph from S3"
+  name        = "${var.instantiation_name}-web-ui-authenticated"
+  description = "Allow DirtBag Pi UI to do authenticated stuff"
 
   policy = <<POLICY
 {

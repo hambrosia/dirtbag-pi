@@ -18,7 +18,7 @@ resource "aws_cognito_user_pool_client" "dirtbag_ui_app_client" {
   user_pool_id = aws_cognito_user_pool.dirtbag_user_pool.id
 }
 
-resource "aws_cognito_identity_pool" "dirtbag_ui_app_id_pool" {
+resource "aws_cognito_identity_pool" "dirtbag_ui_id_pool" {
 
   identity_pool_name = replace(var.instantiation_name, "-", " ")
   allow_unauthenticated_identities = false
@@ -30,7 +30,7 @@ resource "aws_cognito_identity_pool" "dirtbag_ui_app_id_pool" {
 }
 
 resource "aws_cognito_identity_pool_roles_attachment" "dirbag_ui_role_attach" {
-  identity_pool_id = aws_cognito_identity_pool.dirtbag_ui_app_id_pool.id
+  identity_pool_id = aws_cognito_identity_pool.dirtbag_ui_id_pool.id
   roles = {
     "authenticated" = aws_iam_role.dirtbag_web_ui_authenticated.arn
   }
