@@ -223,9 +223,13 @@ resource "aws_iam_policy" "dirtbag_web_ui_authenticated" {
 		"Effect": "Allow",
 		"Action": [
 			"s3:GetObject",
-            "s3:ListObject"
+            "s3:ListObject",
+            "s3:ListBucket"
 		],
-		"Resource": "${aws_s3_bucket.index.arn}/*"
+		"Resource": [
+            "${aws_s3_bucket.index.arn}",
+            "${aws_s3_bucket.index.arn}/*"
+]
 	}]
 }
 POLICY
