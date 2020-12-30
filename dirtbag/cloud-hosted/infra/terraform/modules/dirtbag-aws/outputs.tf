@@ -6,9 +6,10 @@ output "client_secret" {
   value = aws_iam_access_key.dirtbag_client.secret
 }
 
-output "index_url" {
-  value = aws_s3_bucket.index.website_endpoint
-}
+# TODO Update this with the URL of the React Login Page
+//output "index_url" {
+//  value = aws_s3_bucket.index.website_endpoint
+//}
 
 output "web_ui_config_json" {
   value = jsonencode({

@@ -6,10 +6,6 @@ output "client_secret" {
   value = module.dirtbag_instantiation.client_secret
 }
 
-output "index_url" {
-  value = module.dirtbag_instantiation.index_url
-}
-
 output "client_config" {
   value = module.dirtbag_instantiation.web_ui_config_json
 }
