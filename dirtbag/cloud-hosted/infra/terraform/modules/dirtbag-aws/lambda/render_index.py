@@ -1,11 +1,12 @@
-from datetime import datetime, timedelta, timezone
 import os
+from datetime import datetime, timedelta
 
 import boto3
-from boto3.dynamodb.conditions import Key, Attr
+import plotly.graph_objects as go
+import pytz
+from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 from pytz import timezone
-import plotly.graph_objects as go
 
 # Soil reading calibration
 MIN_MOISTURE = 315
@@ -39,7 +40,7 @@ def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     table_name = os.environ.get('TABLE_NAME')
     table = dynamodb.Table(table_name)
-    datetime_now = datetime.now(tz=timezone.utc)
+    datetime_now = datetime.now(tz=pytz.utc)
     timestamp_one_month_ago = str(get_timestamp_month_ago(datetime_now))
     timestamp_utc = str(datetime_now)
 
@@ -64,7 +65,7 @@ def lambda_handler(event, context):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
     fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
-    fig.update_layout(title=f'DirtBag Pi - Soil Stats - {timestamp_utc}', template='plotly')
+    fig.update_layout(title=f'DirtBag Pi - Soil Stats - {timestamp_local}', template='plotly')
     fig.write_html(output_path)
 
     # Save graph to S3 (boto3)
