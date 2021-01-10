@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import datetime, timedelta
 
@@ -33,6 +34,37 @@ def get_soil_moisture_percent(raw_value: int) -> float:
     return round(percent, 2)
 
 
+def render_graph_html(timestamps, moisture_readings, temp_readings, timestamp_local) -> None:
+    """Render graph, save to /tmp """
+    output_path = '/tmp/index.html'
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
+    fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
+    fig.update_layout(title=f'DirtBag Pi - Soil Stats - {timestamp_local}', template='plotly')
+    fig.write_html(output_path)
+
+
+def save_graph_to_bucket(s3_client, file_name, bucket_name, object_name, path):
+    """Use put_file instead of put_object to enable multipart transfer"""
+    try:
+        response = s3_client.upload_file(file_name, bucket_name, object_name)
+    except ClientError as e:
+        logging.error(e)
+        return str(e)
+    # Set content-type to text/html to enable viewing directly in browser
+    s3 = boto3.resource('s3')
+    api_client = s3.meta.client
+
+    object_name = f"{path}/index.html"
+
+    response = api_client.copy_object(Bucket=bucket_name,
+                                      Key=object_name,
+                                      ContentType="text/html",
+                                      MetadataDirective="REPLACE",
+                                      CopySource=bucket_name + "/" + object_name)
+    return response
+
+
 def lambda_handler(event, context):
     """Gets recent readings from database, prepares as html graph with Plotly, saves to S3"""
 
@@ -55,40 +87,13 @@ def lambda_handler(event, context):
 
     # Prepare readings for display as graph
     readings_last_month = response['Items']
-
     timestamps = [row['timestamp'] for row in readings_last_month]
     moisture_readings = [get_soil_moisture_percent(row['soilmoisture']) for row in readings_last_month]
     temp_readings = [row['soiltemp'] for row in readings_last_month]
 
-    # Render graph, save to /tmp
-    output_path = '/tmp/index.html'
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
-    fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
-    fig.update_layout(title=f'DirtBag Pi - Soil Stats - {timestamp_local}', template='plotly')
-    fig.write_html(output_path)
+    render_graph_html(timestamps=timestamps, moisture_readings=moisture_readings, temp_readings=temp_readings,
+                      timestamp_local=timestamp_local)
 
-    # Save graph to S3 (boto3)
-    s3_client = boto3.client('s3')
-    bucket_name = os.environ['OUTPUT_BUCKET']
-    file_name = "/tmp/index.html"
-    path = 'public'
-    object_name = f"{path}/index.html"
-
-    # Use put_file instead of put_object to enable multipart transfer
-    try:
-        response = s3_client.upload_file(file_name, bucket_name, object_name)
-    except ClientError as e:
-        logging.error(e)
-        return False
-
-    # Set content-type to text/html to enable viewing directly in browser
-    s3 = boto3.resource('s3')
-    api_client = s3.meta.client
-    response = api_client.copy_object(Bucket=bucket_name,
-                                      Key=object_name,
-                                      ContentType="text/html",
-                                      MetadataDirective="REPLACE",
-                                      CopySource=bucket_name + "/" + object_name)
-    print(event)
-    return
+    res = save_graph_to_bucket(s3_client=boto3.client('s3'), bucket_name=os.environ['OUTPUT_BUCKET'],
+                         file_name="/tmp/index.html", path='public')
+    print(res)
