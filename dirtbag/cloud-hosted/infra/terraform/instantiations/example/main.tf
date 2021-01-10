@@ -14,4 +14,5 @@ terraform {
 module "dirtbag_instantiation" {
   source = "../../modules/dirtbag-aws"
   instantiation_name = "dirtbag-example"
+  timezone = ""
 }

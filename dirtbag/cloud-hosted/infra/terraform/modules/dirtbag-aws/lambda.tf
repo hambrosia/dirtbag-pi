@@ -33,7 +33,7 @@ resource "aws_lambda_function" "render_index" {
   handler          = "render_index.lambda_handler"
   runtime          = "python3.7"
   source_code_hash = data.archive_file.render_index.output_base64sha256
-  layers           = [aws_lambda_layer_version.plotly_layer.arn]
+  layers           = [aws_lambda_layer_version.requirements_layer.arn]
   timeout          = 30
   memory_size      = 256
 
@@ -41,22 +41,22 @@ resource "aws_lambda_function" "render_index" {
     variables = {
       OUTPUT_BUCKET = aws_s3_bucket.index.id
       TABLE_NAME    = aws_dynamodb_table.dirtbag-dynamodb-table.name
+      TIME_ZONE     = var.timezone
     }
   }
-
 }
 
-resource null_resource "make_plotly_layer" {
+resource null_resource "make_requirements_layer" {
   provisioner "local-exec" {
-    working_dir = "${path.module}/lambda/plotly-layer"
-    command     = "mkdir -p python && pip3 install -r requirements.txt -t python && zip -r plotly_layer.zip ./python"
+    working_dir = "${path.module}/lambda/requirements-layer"
+    command     = "mkdir -p python && pip3 install -r requirements.txt -t python && zip -r requirements_layer.zip ./python"
   }
 }
 
-resource "aws_lambda_layer_version" "plotly_layer" {
-  depends_on          = [null_resource.make_plotly_layer]
-  layer_name          = "${var.instantiation_name}-plotly-layer"
-  filename            = "${path.module}/lambda/plotly-layer/plotly_layer.zip"
+resource "aws_lambda_layer_version" "requirements_layer" {
+  depends_on          = [null_resource.make_requirements_layer]
+  layer_name          = "${var.instantiation_name}-requirements-layer"
+  filename            = "${path.module}/lambda/requirements-layer/requirements_layer.zip"
   compatible_runtimes = ["python3.6", "python3.7"]
 }
 

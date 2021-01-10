@@ -4,6 +4,7 @@ import os
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
+from pytz import timezone
 import plotly.graph_objects as go
 
 # Soil reading calibration
@@ -40,13 +41,15 @@ def lambda_handler(event, context):
     table = dynamodb.Table(table_name)
     datetime_now = datetime.now(tz=timezone.utc)
     timestamp_one_month_ago = str(get_timestamp_month_ago(datetime_now))
-    timestamp_now = str(datetime_now)
-    sensor_id = str(event['Records'][0]['dynamodb']['Keys']['sensorid']['S'])
+    timestamp_utc = str(datetime_now)
 
+    fmt = '%Y-%m-%d %H:%M:%S %Z%z'
+    timestamp_local = str(datetime_now.astimezone(timezone('US/Pacific')).strftime(fmt))
+    sensor_id = str(event['Records'][0]['dynamodb']['Keys']['sensorid']['S'])
 
     response = table.query(
         KeyConditionExpression=Key('sensorid').eq(sensor_id) & Key('timestamp').between(
-            timestamp_one_month_ago, timestamp_now)
+            timestamp_one_month_ago, timestamp_utc)
     )
 
     # Prepare readings for display as graph
@@ -61,14 +64,15 @@ def lambda_handler(event, context):
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=timestamps, y=moisture_readings, mode='lines', name='Soil Moisture Percent'))
     fig.add_trace(go.Scatter(x=timestamps, y=temp_readings, mode='lines', name='Soil Temperature Celsius'))
-    fig.update_layout(title=f'DirtBag Pi - Soil Stats - {timestamp_now}', template='plotly')
+    fig.update_layout(title=f'DirtBag Pi - Soil Stats - {timestamp_utc}', template='plotly')
     fig.write_html(output_path)
 
     # Save graph to S3 (boto3)
     s3_client = boto3.client('s3')
     bucket_name = os.environ['OUTPUT_BUCKET']
     file_name = "/tmp/index.html"
-    object_name = "index.html"
+    path = 'public'
+    object_name = f"{path}/index.html"
 
     # Use put_file instead of put_object to enable multipart transfer
     try:
