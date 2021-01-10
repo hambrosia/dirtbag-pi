@@ -44,8 +44,10 @@ def render_graph_html(timestamps, moisture_readings, temp_readings, timestamp_lo
     fig.write_html(output_path)
 
 
-def save_graph_to_bucket(s3_client, file_name, bucket_name, object_name, path):
+def save_graph_to_bucket(s3_client, file_name, bucket_name, path):
     """Use put_file instead of put_object to enable multipart transfer"""
+    object_name = f"{path}/index.html"
+
     try:
         response = s3_client.upload_file(file_name, bucket_name, object_name)
     except ClientError as e:
@@ -54,8 +56,6 @@ def save_graph_to_bucket(s3_client, file_name, bucket_name, object_name, path):
     # Set content-type to text/html to enable viewing directly in browser
     s3 = boto3.resource('s3')
     api_client = s3.meta.client
-
-    object_name = f"{path}/index.html"
 
     response = api_client.copy_object(Bucket=bucket_name,
                                       Key=object_name,
@@ -94,6 +94,6 @@ def lambda_handler(event, context):
     render_graph_html(timestamps=timestamps, moisture_readings=moisture_readings, temp_readings=temp_readings,
                       timestamp_local=timestamp_local)
 
-    res = save_graph_to_bucket(s3_client=boto3.client('s3'), bucket_name=os.environ['OUTPUT_BUCKET'],
-                         file_name="/tmp/index.html", path='public')
+    res = save_graph_to_bucket(s3_client=boto3.client('s3'), file_name="/tmp/index.html",
+                               bucket_name=os.environ['OUTPUT_BUCKET'], path='public')
     print(res)
