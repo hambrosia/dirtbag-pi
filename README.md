@@ -63,7 +63,7 @@ To set up the cloud-hosted version of DirtBag Pi follow the steps below.
 ## Understanding the Output
 * Soil capacitance readings are returned by the sensor as a value between 200 and 2000. In practice, the raw readings range between ~315 (exposure to fresh Los Angeles air) and ~1015 (submersion in tap water). DirtBag converts the raw capacitance reading to an approximate moisture percent value calibrated for LA air and water and rounded to two decimal points.
 * Soil temperature readings are returned natively by the sensor in Celsius and displayed to the user in Celsius.
-![Example plot](img/plot.png?raw=true "Example Graph")
+![Example plot](img/graph_browser.png?raw=true "Example Graph")
 
 ## Current and Planned Features
 * Part 1 (DONE): Displays a webpage on the local network that shows the soil moisture and temperature.
